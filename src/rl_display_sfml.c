@@ -13,9 +13,16 @@ struct _RLDisplay
         char *title;
         uint32_t width;
         uint32_t height;
-        sfColor clear_color;
         sfRenderWindow *handle;
     } window;
+    
+    struct {
+        uint32_t width;
+        uint32_t height;
+        sfVector2f scale;
+        sfColor clear_color;
+        sfRenderTexture *handle;
+    } frame;
 };
 
 struct _RLTile {
@@ -80,39 +87,56 @@ RLDisplay_resized(RLDisplay *this, uint32_t width, uint32_t height)
 
     this->window.width = width;
     this->window.height = height;
+
+    this->frame.scale = (sfVector2f){
+        (float)width / (float)this->frame.width,
+        (float)height / (float)this->frame.height
+    };
 }
 
 RLDisplay *
-RLDisplay_create(uint32_t width, uint32_t height, char *title, bool fscreen)
+RLDisplay_create(uint32_t winw, uint32_t winh, char *title, bool fscreen,
+    uint32_t framew, uint32_t frameh)
 {
     RLDisplay *this = NULL;
-    sfVideoMode mode = {width, height, 32};
+    sfVideoMode mode = {winw, winh, 32};
     sfUint32 style = (fscreen) ? sfFullscreen : sfClose | sfTitlebar;
 
     if (!(this = malloc(sizeof(RLDisplay))))
-        return NULL;
+        goto error;
 
     if (!(this->window.title = strdup(title)))
-    {
-        free(this);
-        return NULL;
-    }
+        goto error;
 
     if (!(this->window.handle = sfRenderWindow_create(mode, title, style,
         NULL)))
-    {
-        free(this->window.title);
-        free(this);
+        goto error;
 
-        return NULL;
-    }
+    this->window.width = winw;
+    this->window.height = winh;
 
-    this->window.clear_color = sfBlack;
+    if (!(this->frame.handle = sfRenderTexture_create(framew, frameh, false)))
+        goto error;
+
+    sfRenderWindow_setActive(this->window.handle, true);
+    this->frame.clear_color = sfBlack;
+    this->frame.scale = (sfVector2f){
+        (float)winw / (float)framew,
+        (float)winh / (float)frameh
+    };
+
+    this->frame.width = framew;
+    this->frame.height = frameh;
 
     for (size_t i = 0; i < 65536; ++i)
         glyphs[i] = NULL;
 
     return this;
+
+error:
+
+    RLDisplay_cleanup(this);
+    return NULL;
 }
 
 void
@@ -140,6 +164,12 @@ RLDisplay_resize(RLDisplay *this, uint32_t width, uint32_t height)
 
     this->window.width = width;
     this->window.height = height;
+
+    this->frame.scale = (sfVector2f){
+        (float)width / (float)this->frame.width,
+        (float)height / (float)this->frame.height
+    };
+
     sfRenderWindow_setSize(this->window.handle, size);
 }
 
@@ -192,9 +222,17 @@ RLDisplay_cleanup(RLDisplay *this)
     for (size_t i = 0; i < 65536; ++i)
         if (glyphs[i]) free(glyphs[i]);
 
-    sfRenderWindow_destroy(this->window.handle);
-    free(this->window.title);
-    free(this);
+    if (this->frame.handle)
+        sfRenderTexture_destroy(this->frame.handle);
+
+    if (this->window.handle)
+        sfRenderWindow_destroy(this->window.handle);
+
+    if (this->window.title)
+        free(this->window.title);
+
+    if (this)
+        free(this);
 }
 
 bool
@@ -236,7 +274,7 @@ RLDisplay_clear(RLDisplay *this)
     if (!this || !this->window.handle)
         return;
 
-    sfRenderWindow_clear(this->window.handle, this->window.clear_color);
+    sfRenderTexture_clear(this->frame.handle, this->frame.clear_color);
 }
 
 void
@@ -245,13 +283,13 @@ RLDisplay_clear_color(RLDisplay *this, uint8_t rgba[4])
     if (!this)
         return;
 
-    this->window.clear_color = (sfColor){rgba[0], rgba[1], rgba[2], rgba[3]};
+    this->frame.clear_color = (sfColor){rgba[0], rgba[1], rgba[2], rgba[3]};
 }
 
 void
 RLDisplay_draw_tilemap(RLDisplay *this, RLTileMap *tmap, float x, float y)
 {
-    static sfRenderStates states;
+    sfRenderStates states;
 
     if (!this || !this->window.handle || !tmap)
         return;
@@ -262,17 +300,28 @@ RLDisplay_draw_tilemap(RLDisplay *this, RLTileMap *tmap, float x, float y)
     sfTransform_translate(&states.transform, x, y);
     states.texture = sfFont_getTexture(tmap->font, tmap->chrsize);
 
-    sfRenderWindow_drawVertexArray(this->window.handle, tmap->bg, &states);
-    sfRenderWindow_drawVertexArray(this->window.handle, tmap->fg, &states);
+    sfRenderTexture_drawVertexArray(this->frame.handle, tmap->bg, &states);
+    sfRenderTexture_drawVertexArray(this->frame.handle, tmap->fg, &states);
 }
 
 void
 RLDisplay_present(RLDisplay *this)
 {
-    if (!this || !this->window.handle)
+    sfSprite *sprite = NULL;
+
+    if (!this || !this->window.handle || !this->frame.handle
+        || !(sprite = sfSprite_create()))
         return;
 
+    sfRenderTexture_display(this->frame.handle);
+
+    sfSprite_setScale(sprite, this->frame.scale);
+    sfSprite_setTexture(sprite,
+        sfRenderTexture_getTexture(this->frame.handle), false);
+
+    sfRenderWindow_drawSprite(this->window.handle, sprite, NULL);
     sfRenderWindow_display(this->window.handle);
+    sfSprite_destroy(sprite);
 }
 
 bool
@@ -592,7 +641,7 @@ RLTileMap_gen_fg(RLTileMap *this, uint32_t index, RLTile *tile, uint32_t x,
     index *= 4;
 
     sfVertexArray_getVertex(this->fg, index)->position = (sfVector2f){
-        (float)x + r,
+        (float)x * (float)(this->offsetx) + r,
         (float)y * (float)(this->offsety) + b
     };
 
@@ -743,9 +792,15 @@ RLTileMap_cleanup(RLTileMap *this)
     if (!this)
         return;
 
-    sfFont_destroy(this->font);
-    sfVertexArray_destroy(this->fg);
-    sfVertexArray_destroy(this->bg);
+    if (this->font)
+        sfFont_destroy(this->font);
 
-    free(this);
+    if (this->fg)
+        sfVertexArray_destroy(this->fg);
+
+    if (this->bg)
+        sfVertexArray_destroy(this->bg);
+
+    if (this)
+        free(this);
 }

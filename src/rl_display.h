@@ -79,7 +79,8 @@ typedef enum {
 } RLDisplayKey;
 
 extern RLDisplay *
-RLDisplay_create(uint32_t width, uint32_t height, char *title, bool fscreen);
+RLDisplay_create(uint32_t winw, uint32_t winh, char *title, bool fscreen,
+    uint32_t framew, uint32_t frameh);
 
 extern void
 RLDisplay_fscreen(RLDisplay *this, bool fscreen);
