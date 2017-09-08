@@ -7,7 +7,7 @@ interface is generic across backends.
 ## Installation
 
 For now, copy `src/rl_display.h` and the implementation file of your choosing
-into your project. Right now only the CSFML implementation
+into your project. Currently only the CSFML implementation
 (`src/rl_display_sfml.c`) is available.
 
 Once stabilized, a header-only version of the library will be generated.
@@ -16,7 +16,7 @@ Once stabilized, a header-only version of the library will be generated.
 
 Because whenever I went to make a roguelike game, regardless of the window
 management/rendering library I used, I'd eventually end up abstracting things
-out into a similar API. So I thought I'd standardize that API, so that in the
+out into a similar API. I decided to standardize that API, so that in the
 future I can cut down on boilerplate code. And by using C99, it should be easy
 to generate bindings for other languages.
 
