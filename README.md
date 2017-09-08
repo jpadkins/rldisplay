@@ -37,12 +37,24 @@ RLTileMap *tmap = NULL;
 uint8_t fg_color[4] = {255, 0, 0, 255};
 uint8_t bg_color[4] = {0, 0, 255, 255};
 
+/* 1280x720 is the window size, 800x576 is the frame size which is stretched
+ * to the window. The third parameter specifies the window title and the fourth
+ * specifies whether or not the window is fullscreen.
+ */
 if (!(disp = RLDisplay_create(1280, 720, "title", false, 800, 576)))
     goto cleanup;
 
+/* RLTileMaps are grids of characters with the same character size and spacing.
+ * For this RLTileMap, the character size is 16, as well as the x and y spacing.
+ * 50x36 are the dimensions of the map.
+ */
 else if (!(tmap = RLTileMap_create("res/fonts/unifont.ttf", 16, 16, 16, 50, 36)))
     goto cleanup;
 
+/* When you create a tile, you specify the type. Either RLTILE_TEXT, RLTILE_EXACT,
+ * RLTILE_FLOOR, RLTILE_CENTER. If the type is RLTILE_EXACT, then the last two
+ * parameters specify the right and down offset of the glyph from the top-left.
+ */
 else if (!(tile = RLTile_create(L'╬', fg_color, bg_color, RLTILE_CENTER, 0.0f, 0.0f)))
     goto cleanup;
 
