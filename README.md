@@ -9,4 +9,8 @@ with modern OpenGL/FreeType using GLAD to bind the function pointers.
 
 Once stabilized, a header-only version of the library will be generated.
 
-![example output](res/images/example.png?raw=true)
+### A 50x36 grid of 16px characters with even spacing:
+![example output](res/images/example0.png?raw=true)
+
+### An arbitrary # of layers can be added. Character size and spacing is adjustable.
+![example output](res/images/example1.png?raw=true)
