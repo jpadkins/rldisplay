@@ -13,7 +13,7 @@ library. CSFML is available in the package managers for most \*nix, homebrew
 on macOS, or can be downloaded directly from the project's website prebuilt for
 Windows or the source code for \*BSD: [link.](https://www.sfml-dev.org/download/csfml/)
 
-Once stabilized, a header-only version of the library will be generated.
+Once stabilized, a header-only version of roguelike_display will be generated.
 
 ## Why
 
