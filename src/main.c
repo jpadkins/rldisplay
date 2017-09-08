@@ -1,4 +1,7 @@
 #include <time.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include "rl_display.h"
@@ -8,9 +11,9 @@ int main(void)
     bool run = true;
     RLTile *tile = NULL;
     RLDisplay *disp = NULL;
-    RLTileMap *tmap0 = NULL, *tmap1 = NULL;;
+    RLTileMap *tmap = NULL;
     int result = EXIT_SUCCESS;
-    uint8_t color[4] = { 0, 255, 0, 255 };
+    uint8_t color[4] = { 0, 0, 0, 255 };
 
     srand((unsigned)time(NULL));
 
@@ -25,14 +28,8 @@ int main(void)
     RLDisplay_framerate(disp, 60);
     RLDisplay_clear_color(disp, color);
 
-    if (!(tmap0 = RLTileMap_create("res/fonts/unifont.ttf", 16, 16, 16, 50,
+    if (!(tmap = RLTileMap_create("res/fonts/unifont.ttf", 16, 16, 16, 50,
         36)))
-    {
-        result = EXIT_FAILURE;
-        goto cleanup;
-    }
-    if (!(tmap1 = RLTileMap_create("res/fonts/unifont.ttf", 32, 32, 32, 10,
-        10)))
     {
         result = EXIT_FAILURE;
         goto cleanup;
@@ -43,47 +40,6 @@ int main(void)
         goto cleanup;
     }
 
-    for (uint32_t j = 0; j < 36; ++j)
-    {
-        for (uint32_t i = 0; i < 50; ++i)
-        {
-            RLTile_set_glyph(tile, (wchar_t)(rand() % 65536));
-
-            for (uint32_t k = 0; k < 3; ++k)
-                color[k] = (uint8_t)(rand() % 255);
-
-            RLTile_set_fg(tile, color);
-
-            for (uint32_t k = 0; k < 3; ++k)
-                color[k] = (uint8_t)(rand() % 255);
-
-            RLTile_set_bg(tile, color);
-
-            RLTileMap_put_tile(tmap0, tile, i, j);
-        }
-    }
-
-    for (uint32_t j = 0; j < 10; ++j)
-    {
-        for (uint32_t i = 0; i < 10; ++i)
-        {
-            RLTile_set_glyph(tile, (wchar_t)(rand() % 65536));
-
-            for (uint32_t k = 0; k < 3; ++k)
-                color[k] = (uint8_t)(rand() % 255);
-
-            RLTile_set_fg(tile, color);
-
-            for (uint32_t k = 0; k < 3; ++k)
-                color[k] = (uint8_t)(rand() % 255);
-
-            RLTile_set_bg(tile, color);
-
-            RLTileMap_put_tile(tmap1, tile, i, j);
-
-        }
-    }
-
     while (RLDisplay_status(disp) && run)
     {
         RLDisplay_events_flush(disp);
@@ -91,59 +47,13 @@ int main(void)
         if (RLDisplay_key_pressed(disp, RLDISPLAY_KEY_ESCAPE))
             run = false;
 
-        if (RLDisplay_key_pressed(disp, RLDISPLAY_KEY_SPACE))
-        {
-            for (uint32_t j = 0; j < 36; ++j)
-            {
-                for (uint32_t i = 0; i < 50; ++i)
-                {
-                    RLTile_set_glyph(tile, (wchar_t)(rand() % 65536));
-
-                    for (uint32_t k = 0; k < 3; ++k)
-                        color[k] = (uint8_t)(rand() % 255);
-
-                    RLTile_set_fg(tile, color);
-
-                    for (uint32_t k = 0; k < 3; ++k)
-                        color[k] = (uint8_t)(rand() % 255);
-
-                    RLTile_set_bg(tile, color);
-
-                    RLTileMap_put_tile(tmap0, tile, i, j);
-                }
-            }
-
-            for (uint32_t j = 0; j < 10; ++j)
-            {
-                for (uint32_t i = 0; i < 10; ++i)
-                {
-                    RLTile_set_glyph(tile, (wchar_t)(rand() % 65536));
-
-                    for (uint32_t k = 0; k < 3; ++k)
-                        color[k] = (uint8_t)(rand() % 255);
-
-                    RLTile_set_fg(tile, color);
-
-                    for (uint32_t k = 0; k < 3; ++k)
-                        color[k] = (uint8_t)(rand() % 255);
-
-                    RLTile_set_bg(tile, color);
-
-                    RLTileMap_put_tile(tmap1, tile, i, j);
-
-                }
-            }
-        }
-
         RLDisplay_clear(disp);
-        RLDisplay_draw_tilemap(disp, tmap0, 0.0f, 0.0f);
-        RLDisplay_draw_tilemap(disp, tmap1, 40.0f, 60.0f);
+        RLDisplay_draw_tilemap(disp, tmap, 0.0f, 0.0f);
         RLDisplay_present(disp);
     }
 
 cleanup:
-    if (tmap0) RLTileMap_cleanup(tmap0);
-    if (tmap1) RLTileMap_cleanup(tmap1);
+    if (tmap) RLTileMap_cleanup(tmap);
     if (disp) RLDisplay_cleanup(disp);
     if (tile) RLTile_cleanup(tile);
 
