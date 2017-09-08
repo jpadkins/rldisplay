@@ -78,8 +78,8 @@ while (RLDisplay_status(disp) && tun)
 #### A 50x36 grid of 16px random characters with random backgrounds and even spacing:
 ![example output](res/images/example0.png?raw=true)
 
-#### An arbitrary number of layers can be added. Character size and spacing is adjustable.
+#### An arbitrary number of layers can be added. Character size and spacing is adjustable:
 ![example output](res/images/example1.png?raw=true)
 
-#### There are many options for spacing individual characters.
+#### There are many options for spacing individual characters:
 ![example output](res/images/example2.png?raw=true)
