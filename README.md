@@ -8,3 +8,5 @@ being the initial backend window management/rendering library used
 with modern OpenGL/FreeType using GLAD to bind the function pointers.
 
 Once stabilized, a header-only version of the library will be generated.
+
+![example output](res/images/example.png?raw=true)

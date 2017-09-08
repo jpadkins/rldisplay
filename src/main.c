@@ -14,7 +14,7 @@ int main(void)
 
     srand((unsigned)time(NULL));
 
-    if (!(disp = RLDisplay_create(1280, 720, "window", true, 800, 576)))
+    if (!(disp = RLDisplay_create(3840, 2160, "window", true, 800, 576)))
     {
         result = EXIT_FAILURE;
         goto cleanup;
