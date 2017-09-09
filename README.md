@@ -63,7 +63,7 @@ else if (!(tile = RLTile_create(L'╬', fg_color, bg_color, RLTILE_CENTER, 0.0f,
 
 RLTileMap_put_tile(tmap, tile, 0, 0);
 
-while (RLDisplay_status(disp) && tun)
+while (RLDisplay_status(disp) && run)
 {
     RLDisplay_events_flush(disp);
 
