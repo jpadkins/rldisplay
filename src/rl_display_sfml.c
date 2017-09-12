@@ -7,6 +7,8 @@
 #include <SFML/Window.h>
 #include <SFML/Graphics.h>
 
+#define UNUSED(x) (void)x
+
 struct _RLDisplay
 {
     struct {
@@ -332,7 +334,7 @@ RLDisplay_key_pressed(RLDisplay *this, RLDisplayKey key)
 
     // *this is unused in the SFML renderer implementation, but the interface
     // requires it to be passed for compatibility with other backends
-    (void)this;
+    UNUSED(this);
 
     switch (key)
     {
