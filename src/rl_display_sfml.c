@@ -9,7 +9,11 @@
 
 #define UNUSED(x) (void)x
 
-struct _RLDisplay
+/******************************************************************************
+Struct definitions
+******************************************************************************/
+
+struct RLDisplay
 {
     struct {
         char *title;
@@ -27,7 +31,7 @@ struct _RLDisplay
     } frame;
 };
 
-struct _RLTile {
+struct RLTile {
     float right;
     float bottom;
     wchar_t glyph;
@@ -36,7 +40,7 @@ struct _RLTile {
     RLTileType type;
 };
 
-struct _RLTileMap
+struct RLTileMap
 {
     sfFont *font;
     uint32_t width;
@@ -48,7 +52,16 @@ struct _RLTileMap
     sfVertexArray *bg;
 };
 
+/******************************************************************************
+Static global variables
+******************************************************************************/
+
 static sfGlyph *glyphs[65536];
+
+
+/******************************************************************************
+Static function declarations
+******************************************************************************/
 
 static char *
 strdup(const char *s);
@@ -66,6 +79,10 @@ RLTileMap_gen_bg(RLTileMap *this, uint32_t index, RLTile *tile, uint32_t x,
     uint32_t y);
 static uint32_t
 RLTileMap_get_index(RLTileMap *this, uint32_t x, uint32_t y);
+
+/******************************************************************************
+Static function implementations
+******************************************************************************/
 
 static char *
 strdup(const char *s)
@@ -95,6 +112,10 @@ RLDisplay_resized(RLDisplay *this, uint32_t width, uint32_t height)
         (float)height / (float)this->frame.height
     };
 }
+
+/******************************************************************************
+RLDisplay function implementations
+******************************************************************************/
 
 RLDisplay *
 RLDisplay_create(uint32_t winw, uint32_t winh, char *title, bool fscreen,
@@ -467,6 +488,10 @@ RLDisplay_key_pressed(RLDisplay *this, RLDisplayKey key)
     }
 }
 
+/******************************************************************************
+RLTile function implementations
+******************************************************************************/
+
 RLTile *
 RLTile_create(wchar_t glyph, uint8_t fg[4], uint8_t bg[4],
     RLTileType type, float right, float bottom)
@@ -564,6 +589,10 @@ RLTile_cleanup(RLTile *this)
 
     free(this);
 }
+
+/******************************************************************************
+RLTileMap function implementations
+******************************************************************************/
 
 static void
 RLTileMap_check_glyph(RLTileMap *this, wchar_t glyph)

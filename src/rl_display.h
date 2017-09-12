@@ -7,9 +7,9 @@
 
 // RLDisplay
 
-typedef struct _RLDisplay RLDisplay;
-typedef struct _RLTileMap RLTileMap;
-typedef struct _RLTile RLTile;
+typedef struct RLDisplay RLDisplay;
+typedef struct RLTileMap RLTileMap;
+typedef struct RLTile RLTile;
 
 typedef enum {
     RLTILE_TEXT,
