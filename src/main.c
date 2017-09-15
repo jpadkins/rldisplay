@@ -11,11 +11,13 @@ int main(void)
     bool run = true;
     int result = EXIT_SUCCESS;
     int mousex = -1, mousey = -1;
+    wchar_t *wstr = L"Hello World!\0";
 
     rl_tile *tile = NULL;
     rl_display *disp = NULL;
     rl_tilemap *tmap = NULL;
     rl_color color = { 0, 0, 0, 255 };
+    rl_color fg = { 255, 255, 255, 255};
 
     srand((unsigned)time(NULL));
 
@@ -46,15 +48,18 @@ int main(void)
     {
         for (int j = 0; j < 36; ++j)
         {
-            rl_tilemap_put_tile(tmap, tile, i, j);
+            rl_tilemap_tile(tmap, tile, i, j);
         }
     }
+
+    rl_tilemap_wstr_down(tmap, wstr, fg, color, RL_TILE_CENTER, 0, 1);
+    rl_tilemap_wstr_right(tmap, wstr, fg, color, RL_TILE_CENTER, 0, 0);
 
     while (rl_display_status(disp) && run)
     {
         rl_display_events_flush(disp);
 
-        if (rl_display_key_pressed(disp, RL_DISPLAY_KEY_ESCAPE))
+        if (rl_display_key_pressed(disp, RL_KEY_ESCAPE))
             run = false;
 
         rl_tilemap_mouse(tmap, disp, &mousex, &mousey);
@@ -73,9 +78,9 @@ int main(void)
 
             rl_tile_bg(tile, color);
 
-            rl_tile_glyph(tile, (wchar_t)(rand() % 65536));
+            rl_tile_glyph(tile, (wchar_t)(rand() % 128));
 
-            rl_tilemap_put_tile(tmap, tile, rl_tilemap_mouse_x(tmap, disp),
+            rl_tilemap_tile(tmap, tile, rl_tilemap_mouse_x(tmap, disp),
                 rl_tilemap_mouse_y(tmap, disp));
         }
 

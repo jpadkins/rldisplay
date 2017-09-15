@@ -19,7 +19,7 @@ struct rl_tile {
     wchar_t glyph;
     sfColor fg[4];
     sfColor bg[4];
-    rl_tileType type;
+    rl_tiletype type;
 };
 
 struct rl_tilemap
@@ -373,9 +373,9 @@ rl_display_present(rl_display *this)
 }
 
 bool
-rl_display_key_pressed(rl_display *this, rl_displaykey key)
+rl_display_key_pressed(rl_display *this, rl_key key)
 {
-    if (!this || key < 0 || key >= RL_DISPLAY_KEY_MAXIMUM)
+    if (!this || key < 0 || key >= RL_KEY_MAXIMUM)
         return false;
 
     /* *this is unused in the SFML renderer implementation, but the interface
@@ -384,135 +384,135 @@ rl_display_key_pressed(rl_display *this, rl_displaykey key)
 
     switch (key)
     {
-    case RL_DISPLAY_KEY_A:
+    case RL_KEY_A:
         return sfKeyboard_isKeyPressed(sfKeyA);
-    case RL_DISPLAY_KEY_B:
+    case RL_KEY_B:
         return sfKeyboard_isKeyPressed(sfKeyB);
-    case RL_DISPLAY_KEY_C:
+    case RL_KEY_C:
         return sfKeyboard_isKeyPressed(sfKeyC);
-    case RL_DISPLAY_KEY_D:
+    case RL_KEY_D:
         return sfKeyboard_isKeyPressed(sfKeyD);
-    case RL_DISPLAY_KEY_E:
+    case RL_KEY_E:
         return sfKeyboard_isKeyPressed(sfKeyE);
-    case RL_DISPLAY_KEY_F:
+    case RL_KEY_F:
         return sfKeyboard_isKeyPressed(sfKeyF);
-    case RL_DISPLAY_KEY_G:
+    case RL_KEY_G:
         return sfKeyboard_isKeyPressed(sfKeyG);
-    case RL_DISPLAY_KEY_H:
+    case RL_KEY_H:
         return sfKeyboard_isKeyPressed(sfKeyH);
-    case RL_DISPLAY_KEY_I:
+    case RL_KEY_I:
         return sfKeyboard_isKeyPressed(sfKeyI);
-    case RL_DISPLAY_KEY_J:
+    case RL_KEY_J:
         return sfKeyboard_isKeyPressed(sfKeyJ);
-    case RL_DISPLAY_KEY_K:
+    case RL_KEY_K:
         return sfKeyboard_isKeyPressed(sfKeyK);
-    case RL_DISPLAY_KEY_L:
+    case RL_KEY_L:
         return sfKeyboard_isKeyPressed(sfKeyL);
-    case RL_DISPLAY_KEY_M:
+    case RL_KEY_M:
         return sfKeyboard_isKeyPressed(sfKeyM);
-    case RL_DISPLAY_KEY_N:
+    case RL_KEY_N:
         return sfKeyboard_isKeyPressed(sfKeyN);
-    case RL_DISPLAY_KEY_O:
+    case RL_KEY_O:
         return sfKeyboard_isKeyPressed(sfKeyO);
-    case RL_DISPLAY_KEY_P:
+    case RL_KEY_P:
         return sfKeyboard_isKeyPressed(sfKeyP);
-    case RL_DISPLAY_KEY_Q:
+    case RL_KEY_Q:
         return sfKeyboard_isKeyPressed(sfKeyQ);
-    case RL_DISPLAY_KEY_R:
+    case RL_KEY_R:
         return sfKeyboard_isKeyPressed(sfKeyR);
-    case RL_DISPLAY_KEY_S:
+    case RL_KEY_S:
         return sfKeyboard_isKeyPressed(sfKeyS);
-    case RL_DISPLAY_KEY_T:
+    case RL_KEY_T:
         return sfKeyboard_isKeyPressed(sfKeyT);
-    case RL_DISPLAY_KEY_U:
+    case RL_KEY_U:
         return sfKeyboard_isKeyPressed(sfKeyU);
-    case RL_DISPLAY_KEY_V:
+    case RL_KEY_V:
         return sfKeyboard_isKeyPressed(sfKeyV);
-    case RL_DISPLAY_KEY_W:
+    case RL_KEY_W:
         return sfKeyboard_isKeyPressed(sfKeyW);
-    case RL_DISPLAY_KEY_X:
+    case RL_KEY_X:
         return sfKeyboard_isKeyPressed(sfKeyX);
-    case RL_DISPLAY_KEY_Y:
+    case RL_KEY_Y:
         return sfKeyboard_isKeyPressed(sfKeyY);
-    case RL_DISPLAY_KEY_Z:
+    case RL_KEY_Z:
         return sfKeyboard_isKeyPressed(sfKeyZ);
-    case RL_DISPLAY_KEY_0:
+    case RL_KEY_0:
         return sfKeyboard_isKeyPressed(sfKeyNum0) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad0);
-    case RL_DISPLAY_KEY_1:
+    case RL_KEY_1:
         return sfKeyboard_isKeyPressed(sfKeyNum1) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad1);
-    case RL_DISPLAY_KEY_2:
+    case RL_KEY_2:
         return sfKeyboard_isKeyPressed(sfKeyNum2) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad2);
-    case RL_DISPLAY_KEY_3:
+    case RL_KEY_3:
         return sfKeyboard_isKeyPressed(sfKeyNum3) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad3);
-    case RL_DISPLAY_KEY_4:
+    case RL_KEY_4:
         return sfKeyboard_isKeyPressed(sfKeyNum4) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad4);
-    case RL_DISPLAY_KEY_5:
+    case RL_KEY_5:
         return sfKeyboard_isKeyPressed(sfKeyNum5) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad5);
-    case RL_DISPLAY_KEY_6:
+    case RL_KEY_6:
         return sfKeyboard_isKeyPressed(sfKeyNum6) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad6);
-    case RL_DISPLAY_KEY_7:
+    case RL_KEY_7:
         return sfKeyboard_isKeyPressed(sfKeyNum7) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad7);
-    case RL_DISPLAY_KEY_8:
+    case RL_KEY_8:
         return sfKeyboard_isKeyPressed(sfKeyNum8) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad8);
-    case RL_DISPLAY_KEY_9:
+    case RL_KEY_9:
         return sfKeyboard_isKeyPressed(sfKeyNum9) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad9);
-    case RL_DISPLAY_KEY_ESCAPE:
+    case RL_KEY_ESCAPE:
         return sfKeyboard_isKeyPressed(sfKeyEscape);
-    case RL_DISPLAY_KEY_CONTROL:
+    case RL_KEY_CONTROL:
         return sfKeyboard_isKeyPressed(sfKeyLControl) ||
             sfKeyboard_isKeyPressed(sfKeyRControl);
-    case RL_DISPLAY_KEY_SHIFT:
+    case RL_KEY_SHIFT:
         return sfKeyboard_isKeyPressed(sfKeyLShift) ||
             sfKeyboard_isKeyPressed(sfKeyRShift);
-    case RL_DISPLAY_KEY_ALT:
+    case RL_KEY_ALT:
         return sfKeyboard_isKeyPressed(sfKeyLAlt) ||
             sfKeyboard_isKeyPressed(sfKeyRAlt);
-    case RL_DISPLAY_KEY_SYSTEM:
+    case RL_KEY_SYSTEM:
         return sfKeyboard_isKeyPressed(sfKeyLSystem) ||
             sfKeyboard_isKeyPressed(sfKeyRSystem);
-    case RL_DISPLAY_KEY_SEMICOLON:
+    case RL_KEY_SEMICOLON:
         return sfKeyboard_isKeyPressed(sfKeySemiColon);
-    case RL_DISPLAY_KEY_COMMA:
+    case RL_KEY_COMMA:
         return sfKeyboard_isKeyPressed(sfKeyComma);
-    case RL_DISPLAY_KEY_PERIOD:
+    case RL_KEY_PERIOD:
         return sfKeyboard_isKeyPressed(sfKeyPeriod);
-    case RL_DISPLAY_KEY_QUOTE:
+    case RL_KEY_QUOTE:
         return sfKeyboard_isKeyPressed(sfKeyQuote);
-    case RL_DISPLAY_KEY_SLASH:
+    case RL_KEY_SLASH:
         return sfKeyboard_isKeyPressed(sfKeySlash);
-    case RL_DISPLAY_KEY_TILDE:
+    case RL_KEY_TILDE:
         return sfKeyboard_isKeyPressed(sfKeyTilde);
-    case RL_DISPLAY_KEY_SPACE:
+    case RL_KEY_SPACE:
         return sfKeyboard_isKeyPressed(sfKeySpace);
-    case RL_DISPLAY_KEY_ENTER:
+    case RL_KEY_ENTER:
         return sfKeyboard_isKeyPressed(sfKeyReturn);
-    case RL_DISPLAY_KEY_BACKSPACE:
+    case RL_KEY_BACKSPACE:
         return sfKeyboard_isKeyPressed(sfKeyBack);
-    case RL_DISPLAY_KEY_TAB:
+    case RL_KEY_TAB:
         return sfKeyboard_isKeyPressed(sfKeyTab);
-    case RL_DISPLAY_KEY_UP:
+    case RL_KEY_UP:
         return sfKeyboard_isKeyPressed(sfKeyUp);
-    case RL_DISPLAY_KEY_DOWN:
+    case RL_KEY_DOWN:
         return sfKeyboard_isKeyPressed(sfKeyDown);
-    case RL_DISPLAY_KEY_LEFT:
+    case RL_KEY_LEFT:
         return sfKeyboard_isKeyPressed(sfKeyLeft);
-    case RL_DISPLAY_KEY_RIGHT:
+    case RL_KEY_RIGHT:
         return sfKeyboard_isKeyPressed(sfKeyRight);
-    case RL_DISPLAY_KEY_MOUSELEFT:
+    case RL_KEY_MOUSELEFT:
         return sfMouse_isButtonPressed(sfMouseLeft);
-    case RL_DISPLAY_KEY_MOUSERIGHT:
+    case RL_KEY_MOUSERIGHT:
         return sfMouse_isButtonPressed(sfMouseRight);
-    case RL_DISPLAY_KEY_MOUSEMIDDLE:
+    case RL_KEY_MOUSEMIDDLE:
         return sfMouse_isButtonPressed(sfMouseMiddle);
     default:
         return false;
@@ -577,7 +577,7 @@ rl_tile function implementations
 ******************************************************************************/
 
 rl_tile *
-rl_tile_create(wchar_t glyph, rl_color fg, rl_color bg, rl_tileType type,
+rl_tile_create(wchar_t glyph, rl_color fg, rl_color bg, rl_tiletype type,
     float right, float bottom)
 {
     rl_tile *this = NULL;
@@ -639,7 +639,7 @@ rl_tile_bg(rl_tile *this, rl_color color)
 }
 
 void
-rl_tile_type(rl_tile *this, rl_tileType type)
+rl_tile_type(rl_tile *this, rl_tiletype type)
 {
     if (!this)
         return;
@@ -908,12 +908,53 @@ rl_tilemap_pos(rl_tilemap *this, float x, float y)
 }
 
 void
-rl_tilemap_put_tile(rl_tilemap *this, rl_tile *tile, int x, int y)
+rl_tilemap_tile(rl_tilemap *this, rl_tile *tile, int x, int y)
 {
     if (!this || !tile)
         return;
 
     rl_tilemap_gen_tile(this, tile, x, y);
+}
+
+extern void
+rl_tilemap_wstr_right(rl_tilemap *this, wchar_t *str, rl_color fg, rl_color bg,
+    rl_tiletype type, int x, int y)
+{
+    rl_tile *tile = NULL;
+
+    if (!this || !str)
+        return;
+
+    for (int i = 0; i < (int)wcslen(str); ++i)
+    {
+        if (!(tile = rl_tile_create(str[i], fg, bg, type, 0.0f, 0.0f)))
+            return;
+
+        rl_tilemap_gen_tile(this, tile, (x + i) % this->width,
+            y + ((x + i) / this->width));
+
+        rl_tile_cleanup(tile);
+    }
+}
+
+extern void
+rl_tilemap_wstr_down(rl_tilemap *this, wchar_t *str, rl_color fg, rl_color bg,
+    rl_tiletype type, int x, int y)
+{
+    rl_tile *tile = NULL;
+
+    if (!this || !str)
+        return;
+
+    for (int i = 0; i < (int)wcslen(str); ++i)
+    {
+        if (!(tile = rl_tile_create(str[i], fg, bg, type, 0.0f, 0.0f)))
+            return;
+
+        rl_tilemap_gen_tile(this, tile, x, y + i);
+
+        rl_tile_cleanup(tile);
+    }   
 }
 
 void

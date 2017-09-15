@@ -27,70 +27,70 @@ typedef enum {
     RL_TILE_EXACT,
     RL_TILE_FLOOR,
     RL_TILE_CENTER
-} rl_tileType;
+} rl_tiletype;
 
 typedef enum {
-    RL_DISPLAY_KEY_A,
-    RL_DISPLAY_KEY_B,
-    RL_DISPLAY_KEY_C,
-    RL_DISPLAY_KEY_D,
-    RL_DISPLAY_KEY_E,
-    RL_DISPLAY_KEY_F,
-    RL_DISPLAY_KEY_G,
-    RL_DISPLAY_KEY_H,
-    RL_DISPLAY_KEY_I,
-    RL_DISPLAY_KEY_J,
-    RL_DISPLAY_KEY_K,
-    RL_DISPLAY_KEY_L,
-    RL_DISPLAY_KEY_M,
-    RL_DISPLAY_KEY_N,
-    RL_DISPLAY_KEY_O,
-    RL_DISPLAY_KEY_P,
-    RL_DISPLAY_KEY_Q,
-    RL_DISPLAY_KEY_R,
-    RL_DISPLAY_KEY_S,
-    RL_DISPLAY_KEY_T,
-    RL_DISPLAY_KEY_U,
-    RL_DISPLAY_KEY_V,
-    RL_DISPLAY_KEY_W,
-    RL_DISPLAY_KEY_X,
-    RL_DISPLAY_KEY_Y,
-    RL_DISPLAY_KEY_Z,
-    RL_DISPLAY_KEY_0,
-    RL_DISPLAY_KEY_1,
-    RL_DISPLAY_KEY_2,
-    RL_DISPLAY_KEY_3,
-    RL_DISPLAY_KEY_4,
-    RL_DISPLAY_KEY_5,
-    RL_DISPLAY_KEY_6,
-    RL_DISPLAY_KEY_7,
-    RL_DISPLAY_KEY_8,
-    RL_DISPLAY_KEY_9,
-    RL_DISPLAY_KEY_ESCAPE,
-    RL_DISPLAY_KEY_CONTROL,
-    RL_DISPLAY_KEY_SHIFT,
-    RL_DISPLAY_KEY_ALT,
-    RL_DISPLAY_KEY_SYSTEM,
-    RL_DISPLAY_KEY_SEMICOLON,
-    RL_DISPLAY_KEY_COMMA,
-    RL_DISPLAY_KEY_PERIOD,
-    RL_DISPLAY_KEY_QUOTE,
-    RL_DISPLAY_KEY_SLASH,
-    RL_DISPLAY_KEY_TILDE,
-    RL_DISPLAY_KEY_SPACE,
-    RL_DISPLAY_KEY_ENTER,
-    RL_DISPLAY_KEY_BACKSPACE,
-    RL_DISPLAY_KEY_TAB,
-    RL_DISPLAY_KEY_UP,
-    RL_DISPLAY_KEY_DOWN,
-    RL_DISPLAY_KEY_LEFT,
-    RL_DISPLAY_KEY_RIGHT,
-    RL_DISPLAY_KEY_MOUSELEFT,
-    RL_DISPLAY_KEY_MOUSERIGHT,
-    RL_DISPLAY_KEY_MOUSEMIDDLE,
+    RL_KEY_A,
+    RL_KEY_B,
+    RL_KEY_C,
+    RL_KEY_D,
+    RL_KEY_E,
+    RL_KEY_F,
+    RL_KEY_G,
+    RL_KEY_H,
+    RL_KEY_I,
+    RL_KEY_J,
+    RL_KEY_K,
+    RL_KEY_L,
+    RL_KEY_M,
+    RL_KEY_N,
+    RL_KEY_O,
+    RL_KEY_P,
+    RL_KEY_Q,
+    RL_KEY_R,
+    RL_KEY_S,
+    RL_KEY_T,
+    RL_KEY_U,
+    RL_KEY_V,
+    RL_KEY_W,
+    RL_KEY_X,
+    RL_KEY_Y,
+    RL_KEY_Z,
+    RL_KEY_0,
+    RL_KEY_1,
+    RL_KEY_2,
+    RL_KEY_3,
+    RL_KEY_4,
+    RL_KEY_5,
+    RL_KEY_6,
+    RL_KEY_7,
+    RL_KEY_8,
+    RL_KEY_9,
+    RL_KEY_ESCAPE,
+    RL_KEY_CONTROL,
+    RL_KEY_SHIFT,
+    RL_KEY_ALT,
+    RL_KEY_SYSTEM,
+    RL_KEY_SEMICOLON,
+    RL_KEY_COMMA,
+    RL_KEY_PERIOD,
+    RL_KEY_QUOTE,
+    RL_KEY_SLASH,
+    RL_KEY_TILDE,
+    RL_KEY_SPACE,
+    RL_KEY_ENTER,
+    RL_KEY_BACKSPACE,
+    RL_KEY_TAB,
+    RL_KEY_UP,
+    RL_KEY_DOWN,
+    RL_KEY_LEFT,
+    RL_KEY_RIGHT,
+    RL_KEY_MOUSELEFT,
+    RL_KEY_MOUSERIGHT,
+    RL_KEY_MOUSEMIDDLE,
 
-    RL_DISPLAY_KEY_MAXIMUM
-} rl_displaykey;
+    RL_KEY_MAXIMUM
+} rl_key;
 
 /******************************************************************************
 rl_display function declarations
@@ -140,7 +140,7 @@ extern void
 rl_display_present(rl_display *this);
 
 extern bool
-rl_display_key_pressed(rl_display *this, rl_displaykey key);
+rl_display_key_pressed(rl_display *this, rl_key key);
 
 extern int
 rl_display_mouse_x(rl_display *this);
@@ -156,7 +156,7 @@ rl_tile function declarations
 ******************************************************************************/
 
 extern rl_tile *
-rl_tile_create(wchar_t glyph, rl_color fg, rl_color bg, rl_tileType type,
+rl_tile_create(wchar_t glyph, rl_color fg, rl_color bg, rl_tiletype type,
     float right, float bottom);
 
 extern rl_tile *
@@ -172,7 +172,7 @@ extern void
 rl_tile_bg(rl_tile *this, rl_color color);
 
 extern void
-rl_tile_type(rl_tile *this, rl_tileType type);
+rl_tile_type(rl_tile *this, rl_tiletype type);
 
 extern void
 rl_tile_right(rl_tile *this, float right);
@@ -195,7 +195,15 @@ extern void
 rl_tilemap_pos(rl_tilemap *this, float x, float y);
 
 extern void
-rl_tilemap_put_tile(rl_tilemap *this, rl_tile *tile, int x, int y);
+rl_tilemap_tile(rl_tilemap *this, rl_tile *tile, int x, int y);
+
+extern void
+rl_tilemap_wstr_right(rl_tilemap *this, wchar_t *str, rl_color fg, rl_color bg,
+    rl_tiletype type, int x, int y);
+
+extern void
+rl_tilemap_wstr_down(rl_tilemap *this, wchar_t *str, rl_color fg, rl_color bg,
+    rl_tiletype type, int x, int y);
 
 extern void
 rl_tilemap_cleanup(rl_tilemap *this);
