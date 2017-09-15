@@ -7,63 +7,99 @@
 #include <SFML/Window.h>
 #include <SFML/Graphics.h>
 
-struct _RLDisplay
+#define UNUSED(x) (void)x
+
+/******************************************************************************
+Struct definitions
+******************************************************************************/
+
+struct rl_tile {
+    float right;
+    float bottom;
+    wchar_t glyph;
+    sfColor fg[4];
+    sfColor bg[4];
+    rl_tileType type;
+};
+
+struct rl_tilemap
+{
+    int width;
+    int height;
+    float posx;
+    float posy;
+    int chrsize;
+    int offsetx;
+    int offsety;
+    sfFont *font;
+    sfVertexArray *fg;
+    sfVertexArray *bg;
+    sfGlyph *glyphs[65536];
+};
+
+struct rl_display
 {
     struct {
+        int width;
+        int height;
         char *title;
-        uint32_t width;
-        uint32_t height;
+        bool fscreen;
         sfRenderWindow *handle;
     } window;
     
     struct {
-        uint32_t width;
-        uint32_t height;
+        int width;
+        int height;
         sfVector2f scale;
         sfColor clear_color;
         sfRenderTexture *handle;
     } frame;
 };
 
-struct _RLTile {
-    float right;
-    float bottom;
-    wchar_t glyph;
-    sfColor fg[4];
-    sfColor bg[4];
-    RLTileType type;
-};
+/******************************************************************************
+Static global variables
+******************************************************************************/
 
-struct _RLTileMap
-{
-    sfFont *font;
-    uint32_t width;
-    uint32_t height;
-    uint32_t offsetx;
-    uint32_t offsety;
-    uint32_t chrsize;
-    sfVertexArray *fg;
-    sfVertexArray *bg;
-};
+/* TODO: Tilemaps with the same chrsize should share their *glyphs arrays */
 
-static sfGlyph *glyphs[65536];
+/* static sfGlyph glyphs[65536]; */
 
+/******************************************************************************
+Static function declarations
+******************************************************************************/
+
+/* misc */
 static char *
 strdup(const char *s);
+
+/* rl_display */
 static void
-RLDisplay_resized(RLDisplay *this, uint32_t width, uint32_t height);
+rl_display_update_scale(rl_display *this);
+
 static void
-RLTileMap_check_glyph(RLTileMap *this, wchar_t glyph);
+rl_display_resized(rl_display *this, int width, int height);
+
+/* rl_tilemap */
 static void
-RLTileMap_gen_tile(RLTileMap *this, RLTile *tile, uint32_t x, uint32_t y);
+rl_tilemap_check_glyph(rl_tilemap *this, wchar_t glyph);
+
+static int
+rl_tilemap_get_index(rl_tilemap *this, int x, int y);
+
 static void
-RLTileMap_gen_fg(RLTileMap *this, uint32_t index, RLTile *tile, uint32_t x,
-    uint32_t y, float r, float b, sfIntRect *rect);
+rl_tilemap_gen_tile(rl_tilemap *this, rl_tile *tile, int x, int y);
+
 static void
-RLTileMap_gen_bg(RLTileMap *this, uint32_t index, RLTile *tile, uint32_t x,
-    uint32_t y);
-static uint32_t
-RLTileMap_get_index(RLTileMap *this, uint32_t x, uint32_t y);
+rl_tilemap_gen_bg(rl_tilemap *this, int index, rl_tile *tile, int x,
+    int y);
+
+static void
+rl_tilemap_gen_fg(rl_tilemap *this, int index, rl_tile *tile, int x,
+    int y, float r, float b, sfIntRect *rect);
+
+/******************************************************************************
+Misc static function implementations
+******************************************************************************/
 
 static char *
 strdup(const char *s)
@@ -79,8 +115,12 @@ strdup(const char *s)
     return d;
 }
 
+/******************************************************************************
+rl_display function implementations
+******************************************************************************/
+
 static void
-RLDisplay_resized(RLDisplay *this, uint32_t width, uint32_t height)
+rl_display_resized(rl_display *this, int width, int height)
 {
     if (!this)
         return;
@@ -88,21 +128,32 @@ RLDisplay_resized(RLDisplay *this, uint32_t width, uint32_t height)
     this->window.width = width;
     this->window.height = height;
 
+    rl_display_update_scale(this);
+}
+
+static void
+rl_display_update_scale(rl_display *this)
+{
+    if (!this)
+        return;
+
     this->frame.scale = (sfVector2f){
-        (float)width / (float)this->frame.width,
-        (float)height / (float)this->frame.height
+        (float)this->window.width / (float)this->frame.width,
+        (float)this->window.height / (float)this->frame.height
     };
 }
 
-RLDisplay *
-RLDisplay_create(uint32_t winw, uint32_t winh, char *title, bool fscreen,
-    uint32_t framew, uint32_t frameh)
+rl_display *
+rl_display_create(int width, int height, int fwidth, int fheight, char *title,
+    bool fscreen)
 {
-    RLDisplay *this = NULL;
-    sfVideoMode mode = {winw, winh, 32};
+    rl_display *this = NULL;
+    sfVideoMode mode = {(unsigned)width, (unsigned)height, 32};
     sfUint32 style = (fscreen) ? sfFullscreen : sfClose | sfTitlebar;
 
-    if (!(this = malloc(sizeof(RLDisplay))))
+    /* TODO: Sanity check for size parameters? */
+
+    if (!(this = malloc(sizeof(rl_display))))
         goto error;
 
     if (!(this->window.title = strdup(title)))
@@ -112,69 +163,68 @@ RLDisplay_create(uint32_t winw, uint32_t winh, char *title, bool fscreen,
         NULL)))
         goto error;
 
-    this->window.width = winw;
-    this->window.height = winh;
+    this->window.width = width;
+    this->window.height = height;
+    this->window.fscreen = fscreen;
 
-    if (!(this->frame.handle = sfRenderTexture_create(framew, frameh, false)))
+    if (!(this->frame.handle = sfRenderTexture_create((unsigned)fwidth,
+        (unsigned)fheight, false)))
         goto error;
 
     sfRenderWindow_setActive(this->window.handle, true);
+
+    this->frame.width = fwidth;
+    this->frame.height = fheight;
     this->frame.clear_color = sfBlack;
-    this->frame.scale = (sfVector2f){
-        (float)winw / (float)framew,
-        (float)winh / (float)frameh
-    };
 
-    this->frame.width = framew;
-    this->frame.height = frameh;
-
-    for (size_t i = 0; i < 65536; ++i)
-        glyphs[i] = NULL;
+    rl_display_update_scale(this);
 
     return this;
 
 error:
 
-    RLDisplay_cleanup(this);
+    rl_display_cleanup(this);
     return NULL;
 }
 
 void
-RLDisplay_fscreen(RLDisplay *this, bool fscreen)
+rl_display_fscreen(rl_display *this, bool fscreen)
 {
-    sfUint32 style = (fscreen) ? sfFullscreen : sfDefaultStyle;
-    sfVideoMode mode = {this->window.width, this->window.height, 32};
+    sfUint32 style = (fscreen) ? sfFullscreen : sfClose | sfTitlebar;
+    sfVideoMode mode = {(unsigned)this->window.width,
+        (unsigned)this->window.height, 32};
 
     if (!this || !this->window.handle)
         return;
 
-    sfRenderWindow_destroy(this->window.handle);
+    this->window.fscreen = fscreen;
 
+    sfRenderWindow_destroy(this->window.handle);
     this->window.handle = sfRenderWindow_create(mode, this->window.title,
         style, NULL);
 }
 
 void
-RLDisplay_resize(RLDisplay *this, uint32_t width, uint32_t height)
+rl_display_resize(rl_display *this, int width, int height)
 {
-    sfVector2u size = {width, height};
+    sfVideoMode mode = {(unsigned)width, (unsigned)height, 32};
+    sfUint32 style = (this->window.fscreen) ? sfFullscreen
+        : sfClose | sfTitlebar;
 
     if (!this || !this->window.handle)
         return;
 
     this->window.width = width;
     this->window.height = height;
+    rl_display_update_scale(this);
 
-    this->frame.scale = (sfVector2f){
-        (float)width / (float)this->frame.width,
-        (float)height / (float)this->frame.height
-    };
-
-    sfRenderWindow_setSize(this->window.handle, size);
+    sfRenderWindow_destroy(this->window.handle);
+    this->window.handle = sfRenderWindow_create(mode, this->window.title,
+        style, NULL);
 }
 
 void
-RLDisplay_rename(RLDisplay *this, const char *title)
+rl_display_rename(rl_display *this, const char *title)
 {
     if (!this || !this->window.title)
         return;
@@ -187,7 +237,7 @@ RLDisplay_rename(RLDisplay *this, const char *title)
 }
 
 void
-RLDisplay_vsync(RLDisplay *this, bool enabled)
+rl_display_vsync(rl_display *this, bool enabled)
 {
     if (!this || !this->window.handle)
         return;
@@ -196,7 +246,7 @@ RLDisplay_vsync(RLDisplay *this, bool enabled)
 }
 
 void
-RLDisplay_cursor(RLDisplay *this, bool visible)
+rl_display_cursor(rl_display *this, bool visible)
 {
     if (!this || !this->window.handle)
         return;
@@ -205,22 +255,19 @@ RLDisplay_cursor(RLDisplay *this, bool visible)
 }
 
 void
-RLDisplay_framerate(RLDisplay *this, uint32_t limit)
+rl_display_fps_limit(rl_display *this, int limit)
 {
     if (!this || !this->window.handle)
         return;
 
-    sfRenderWindow_setFramerateLimit(this->window.handle, limit);
+    sfRenderWindow_setFramerateLimit(this->window.handle, (unsigned)limit);
 }
 
 void
-RLDisplay_cleanup(RLDisplay *this)
+rl_display_cleanup(rl_display *this)
 {
     if (!this)
         return;
-
-    for (size_t i = 0; i < 65536; ++i)
-        if (glyphs[i]) free(glyphs[i]);
 
     if (this->frame.handle)
         sfRenderTexture_destroy(this->frame.handle);
@@ -236,7 +283,7 @@ RLDisplay_cleanup(RLDisplay *this)
 }
 
 bool
-RLDisplay_status(RLDisplay *this)
+rl_display_status(rl_display *this)
 {
     if (!this || !this->window.handle)
         return false;
@@ -245,7 +292,7 @@ RLDisplay_status(RLDisplay *this)
 }
 
 void
-RLDisplay_events_flush(RLDisplay *this)
+rl_display_events_flush(rl_display *this)
 {
     static sfEvent evt;
 
@@ -260,7 +307,8 @@ RLDisplay_events_flush(RLDisplay *this)
                 sfRenderWindow_close(this->window.handle);
                 break;
             case sfEvtResized:
-                RLDisplay_resized(this, evt.size.width, evt.size.height);
+                rl_display_resized(this, (int)evt.size.width,
+                    (int)evt.size.height);
                 break;
             default:
                 break;
@@ -269,7 +317,7 @@ RLDisplay_events_flush(RLDisplay *this)
 }
 
 void
-RLDisplay_clear(RLDisplay *this)
+rl_display_clear(rl_display *this)
 {
     if (!this || !this->window.handle)
         return;
@@ -278,16 +326,16 @@ RLDisplay_clear(RLDisplay *this)
 }
 
 void
-RLDisplay_clear_color(RLDisplay *this, uint8_t rgba[4])
+rl_display_clear_color(rl_display *this, rl_color color)
 {
     if (!this)
         return;
 
-    this->frame.clear_color = (sfColor){rgba[0], rgba[1], rgba[2], rgba[3]};
+    this->frame.clear_color = (sfColor){color.r, color.g, color.b, color.a};
 }
 
 void
-RLDisplay_draw_tilemap(RLDisplay *this, RLTileMap *tmap, float x, float y)
+rl_display_draw_tilemap(rl_display *this, rl_tilemap *tmap)
 {
     sfRenderStates states;
 
@@ -297,15 +345,15 @@ RLDisplay_draw_tilemap(RLDisplay *this, RLTileMap *tmap, float x, float y)
     states.shader = NULL;
     states.blendMode = sfBlendAlpha;
     states.transform = sfTransform_Identity;
-    sfTransform_translate(&states.transform, x, y);
-    states.texture = sfFont_getTexture(tmap->font, tmap->chrsize);
+    sfTransform_translate(&states.transform, tmap->posx, tmap->posy);
+    states.texture = sfFont_getTexture(tmap->font, (unsigned)tmap->chrsize);
 
     sfRenderTexture_drawVertexArray(this->frame.handle, tmap->bg, &states);
     sfRenderTexture_drawVertexArray(this->frame.handle, tmap->fg, &states);
 }
 
 void
-RLDisplay_present(RLDisplay *this)
+rl_display_present(rl_display *this)
 {
     sfSprite *sprite = NULL;
 
@@ -325,161 +373,224 @@ RLDisplay_present(RLDisplay *this)
 }
 
 bool
-RLDisplay_key_pressed(RLDisplay *this, RLDisplayKey key)
+rl_display_key_pressed(rl_display *this, rl_displaykey key)
 {
-    if (!this || key < 0 || key >= RLDISPLAY_KEY_MAXIMUM)
+    if (!this || key < 0 || key >= RL_DISPLAY_KEY_MAXIMUM)
         return false;
 
-    // *this is unused in the SFML renderer implementation, but the interface
-    // requires it to be passed for compatibility with other backends
-    (void)this;
+    /* *this is unused in the SFML renderer implementation, but the interface
+       requires it to be passed for compatibility with other backends */
+    UNUSED(this);
 
     switch (key)
     {
-    case RLDISPLAY_KEY_A:
+    case RL_DISPLAY_KEY_A:
         return sfKeyboard_isKeyPressed(sfKeyA);
-    case RLDISPLAY_KEY_B:
+    case RL_DISPLAY_KEY_B:
         return sfKeyboard_isKeyPressed(sfKeyB);
-    case RLDISPLAY_KEY_C:
+    case RL_DISPLAY_KEY_C:
         return sfKeyboard_isKeyPressed(sfKeyC);
-    case RLDISPLAY_KEY_D:
+    case RL_DISPLAY_KEY_D:
         return sfKeyboard_isKeyPressed(sfKeyD);
-    case RLDISPLAY_KEY_E:
+    case RL_DISPLAY_KEY_E:
         return sfKeyboard_isKeyPressed(sfKeyE);
-    case RLDISPLAY_KEY_F:
+    case RL_DISPLAY_KEY_F:
         return sfKeyboard_isKeyPressed(sfKeyF);
-    case RLDISPLAY_KEY_G:
+    case RL_DISPLAY_KEY_G:
         return sfKeyboard_isKeyPressed(sfKeyG);
-    case RLDISPLAY_KEY_H:
+    case RL_DISPLAY_KEY_H:
         return sfKeyboard_isKeyPressed(sfKeyH);
-    case RLDISPLAY_KEY_I:
+    case RL_DISPLAY_KEY_I:
         return sfKeyboard_isKeyPressed(sfKeyI);
-    case RLDISPLAY_KEY_J:
+    case RL_DISPLAY_KEY_J:
         return sfKeyboard_isKeyPressed(sfKeyJ);
-    case RLDISPLAY_KEY_K:
+    case RL_DISPLAY_KEY_K:
         return sfKeyboard_isKeyPressed(sfKeyK);
-    case RLDISPLAY_KEY_L:
+    case RL_DISPLAY_KEY_L:
         return sfKeyboard_isKeyPressed(sfKeyL);
-    case RLDISPLAY_KEY_M:
+    case RL_DISPLAY_KEY_M:
         return sfKeyboard_isKeyPressed(sfKeyM);
-    case RLDISPLAY_KEY_N:
+    case RL_DISPLAY_KEY_N:
         return sfKeyboard_isKeyPressed(sfKeyN);
-    case RLDISPLAY_KEY_O:
+    case RL_DISPLAY_KEY_O:
         return sfKeyboard_isKeyPressed(sfKeyO);
-    case RLDISPLAY_KEY_P:
+    case RL_DISPLAY_KEY_P:
         return sfKeyboard_isKeyPressed(sfKeyP);
-    case RLDISPLAY_KEY_Q:
+    case RL_DISPLAY_KEY_Q:
         return sfKeyboard_isKeyPressed(sfKeyQ);
-    case RLDISPLAY_KEY_R:
+    case RL_DISPLAY_KEY_R:
         return sfKeyboard_isKeyPressed(sfKeyR);
-    case RLDISPLAY_KEY_S:
+    case RL_DISPLAY_KEY_S:
         return sfKeyboard_isKeyPressed(sfKeyS);
-    case RLDISPLAY_KEY_T:
+    case RL_DISPLAY_KEY_T:
         return sfKeyboard_isKeyPressed(sfKeyT);
-    case RLDISPLAY_KEY_U:
+    case RL_DISPLAY_KEY_U:
         return sfKeyboard_isKeyPressed(sfKeyU);
-    case RLDISPLAY_KEY_V:
+    case RL_DISPLAY_KEY_V:
         return sfKeyboard_isKeyPressed(sfKeyV);
-    case RLDISPLAY_KEY_W:
+    case RL_DISPLAY_KEY_W:
         return sfKeyboard_isKeyPressed(sfKeyW);
-    case RLDISPLAY_KEY_X:
+    case RL_DISPLAY_KEY_X:
         return sfKeyboard_isKeyPressed(sfKeyX);
-    case RLDISPLAY_KEY_Y:
+    case RL_DISPLAY_KEY_Y:
         return sfKeyboard_isKeyPressed(sfKeyY);
-    case RLDISPLAY_KEY_Z:
+    case RL_DISPLAY_KEY_Z:
         return sfKeyboard_isKeyPressed(sfKeyZ);
-    case RLDISPLAY_KEY_0:
+    case RL_DISPLAY_KEY_0:
         return sfKeyboard_isKeyPressed(sfKeyNum0) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad0);
-    case RLDISPLAY_KEY_1:
+    case RL_DISPLAY_KEY_1:
         return sfKeyboard_isKeyPressed(sfKeyNum1) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad1);
-    case RLDISPLAY_KEY_2:
+    case RL_DISPLAY_KEY_2:
         return sfKeyboard_isKeyPressed(sfKeyNum2) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad2);
-    case RLDISPLAY_KEY_3:
+    case RL_DISPLAY_KEY_3:
         return sfKeyboard_isKeyPressed(sfKeyNum3) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad3);
-    case RLDISPLAY_KEY_4:
+    case RL_DISPLAY_KEY_4:
         return sfKeyboard_isKeyPressed(sfKeyNum4) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad4);
-    case RLDISPLAY_KEY_5:
+    case RL_DISPLAY_KEY_5:
         return sfKeyboard_isKeyPressed(sfKeyNum5) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad5);
-    case RLDISPLAY_KEY_6:
+    case RL_DISPLAY_KEY_6:
         return sfKeyboard_isKeyPressed(sfKeyNum6) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad6);
-    case RLDISPLAY_KEY_7:
+    case RL_DISPLAY_KEY_7:
         return sfKeyboard_isKeyPressed(sfKeyNum7) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad7);
-    case RLDISPLAY_KEY_8:
+    case RL_DISPLAY_KEY_8:
         return sfKeyboard_isKeyPressed(sfKeyNum8) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad8);
-    case RLDISPLAY_KEY_9:
+    case RL_DISPLAY_KEY_9:
         return sfKeyboard_isKeyPressed(sfKeyNum9) ||
             sfKeyboard_isKeyPressed(sfKeyNumpad9);
-    case RLDISPLAY_KEY_ESCAPE:
+    case RL_DISPLAY_KEY_ESCAPE:
         return sfKeyboard_isKeyPressed(sfKeyEscape);
-    case RLDISPLAY_KEY_CONTROL:
+    case RL_DISPLAY_KEY_CONTROL:
         return sfKeyboard_isKeyPressed(sfKeyLControl) ||
             sfKeyboard_isKeyPressed(sfKeyRControl);
-    case RLDISPLAY_KEY_SHIFT:
+    case RL_DISPLAY_KEY_SHIFT:
         return sfKeyboard_isKeyPressed(sfKeyLShift) ||
             sfKeyboard_isKeyPressed(sfKeyRShift);
-    case RLDISPLAY_KEY_ALT:
+    case RL_DISPLAY_KEY_ALT:
         return sfKeyboard_isKeyPressed(sfKeyLAlt) ||
             sfKeyboard_isKeyPressed(sfKeyRAlt);
-    case RLDISPLAY_KEY_SYSTEM:
+    case RL_DISPLAY_KEY_SYSTEM:
         return sfKeyboard_isKeyPressed(sfKeyLSystem) ||
             sfKeyboard_isKeyPressed(sfKeyRSystem);
-    case RLDISPLAY_KEY_SEMICOLON:
+    case RL_DISPLAY_KEY_SEMICOLON:
         return sfKeyboard_isKeyPressed(sfKeySemiColon);
-    case RLDISPLAY_KEY_COMMA:
+    case RL_DISPLAY_KEY_COMMA:
         return sfKeyboard_isKeyPressed(sfKeyComma);
-    case RLDISPLAY_KEY_PERIOD:
+    case RL_DISPLAY_KEY_PERIOD:
         return sfKeyboard_isKeyPressed(sfKeyPeriod);
-    case RLDISPLAY_KEY_QUOTE:
+    case RL_DISPLAY_KEY_QUOTE:
         return sfKeyboard_isKeyPressed(sfKeyQuote);
-    case RLDISPLAY_KEY_SLASH:
+    case RL_DISPLAY_KEY_SLASH:
         return sfKeyboard_isKeyPressed(sfKeySlash);
-    case RLDISPLAY_KEY_TILDE:
+    case RL_DISPLAY_KEY_TILDE:
         return sfKeyboard_isKeyPressed(sfKeyTilde);
-    case RLDISPLAY_KEY_SPACE:
+    case RL_DISPLAY_KEY_SPACE:
         return sfKeyboard_isKeyPressed(sfKeySpace);
-    case RLDISPLAY_KEY_ENTER:
+    case RL_DISPLAY_KEY_ENTER:
         return sfKeyboard_isKeyPressed(sfKeyReturn);
-    case RLDISPLAY_KEY_BACKSPACE:
+    case RL_DISPLAY_KEY_BACKSPACE:
         return sfKeyboard_isKeyPressed(sfKeyBack);
-    case RLDISPLAY_KEY_TAB:
+    case RL_DISPLAY_KEY_TAB:
         return sfKeyboard_isKeyPressed(sfKeyTab);
-    case RLDISPLAY_KEY_UP:
+    case RL_DISPLAY_KEY_UP:
         return sfKeyboard_isKeyPressed(sfKeyUp);
-    case RLDISPLAY_KEY_DOWN:
+    case RL_DISPLAY_KEY_DOWN:
         return sfKeyboard_isKeyPressed(sfKeyDown);
-    case RLDISPLAY_KEY_LEFT:
+    case RL_DISPLAY_KEY_LEFT:
         return sfKeyboard_isKeyPressed(sfKeyLeft);
-    case RLDISPLAY_KEY_RIGHT:
+    case RL_DISPLAY_KEY_RIGHT:
         return sfKeyboard_isKeyPressed(sfKeyRight);
+    case RL_DISPLAY_KEY_MOUSELEFT:
+        return sfMouse_isButtonPressed(sfMouseLeft);
+    case RL_DISPLAY_KEY_MOUSERIGHT:
+        return sfMouse_isButtonPressed(sfMouseRight);
+    case RL_DISPLAY_KEY_MOUSEMIDDLE:
+        return sfMouse_isButtonPressed(sfMouseMiddle);
     default:
         return false;
     }
 }
 
-RLTile *
-RLTile_create(wchar_t glyph, uint8_t fg[4], uint8_t bg[4],
-    RLTileType type, float right, float bottom)
+int
+rl_display_mouse_x(rl_display *this)
 {
-    RLTile *this = NULL;
+    int x;
 
-    if (!(this = malloc(sizeof(RLTile))))
+    if (!this || !this->window.handle)
+        return 0;
+
+    x = sfMouse_getPositionRenderWindow(this->window.handle).x;
+
+    if (x < 0 || x > this->window.width)
+        return x;
+
+    return (int)((float)x / this->frame.scale.x);
+}
+
+int
+rl_display_mouse_y(rl_display *this)
+{
+    int y;
+
+    if (!this || !this->window.handle)
+        return 0;
+
+    y = sfMouse_getPositionRenderWindow(this->window.handle).y;
+
+    if (y < 0 || y > this->window.height)
+        return y;
+
+    return (int)((float)y / this->frame.scale.y);
+}
+
+void
+rl_display_mouse(rl_display *this, int *x, int *y)
+{
+    sfVector2i mouse;
+
+    if (!this || !this->window.handle || !x || !y)
+        return;
+
+    mouse = sfMouse_getPositionRenderWindow(this->window.handle);
+
+    if (mouse.x < 0 || mouse.x > this->window.width)
+        *x = mouse.x;
+    else
+        *x = (int)((float)mouse.x / this->frame.scale.x);
+
+    if (mouse.y < 0 || mouse.y > this->window.height)
+        *y = mouse.y;
+    else
+        *y = (int)((float)mouse.y / this->frame.scale.y);
+}
+
+/******************************************************************************
+rl_tile function implementations
+******************************************************************************/
+
+rl_tile *
+rl_tile_create(wchar_t glyph, rl_color fg, rl_color bg, rl_tileType type,
+    float right, float bottom)
+{
+    rl_tile *this = NULL;
+
+    if (!(this = malloc(sizeof(rl_tile))))
         return NULL;
 
     this->glyph = glyph;
     
     for (int i = 0; i < 4; ++i)
     {
-        this->fg[i] = sfColor_fromRGBA(fg[0], fg[1], fg[2], fg[3]);
-        this->bg[i] = sfColor_fromRGBA(bg[0], bg[1], bg[2], bg[3]);
+        this->fg[i] = (sfColor){fg.r, fg.g, fg.b, fg.a};
+        this->bg[i] = (sfColor){bg.r, bg.g, bg.b, bg.a};
     }
 
     this->type = type;
@@ -489,17 +600,17 @@ RLTile_create(wchar_t glyph, uint8_t fg[4], uint8_t bg[4],
     return this;
 }
 
-RLTile *
-RLTile_default(void)
+rl_tile *
+rl_tile_default(void)
 {
-    uint8_t fg[4] = {255, 0, 0, 255};
-    uint8_t bg[4] = {0, 0, 255, 255};
+    rl_color fg = {255, 0, 0, 255};
+    rl_color bg = {0, 0, 255, 255};
 
-    return RLTile_create(L'?', fg, bg, RLTILE_CENTER, 0.0f, 0.0f);
+    return rl_tile_create(L'?', fg, bg, RL_TILE_CENTER, 0.0f, 0.0f);
 }
 
 void
-RLTile_set_glyph(RLTile *this, wchar_t glyph)
+rl_tile_glyph(rl_tile *this, wchar_t glyph)
 {
     if (!this)
         return;
@@ -508,27 +619,27 @@ RLTile_set_glyph(RLTile *this, wchar_t glyph)
 }
 
 void
-RLTile_set_fg(RLTile *this, uint8_t fg[4])
+rl_tile_fg(rl_tile *this, rl_color color)
 {
-    if (!this || !fg)
+    if (!this)
         return;
 
     for (size_t i = 0; i < 4; ++i)
-        this->fg[i] = sfColor_fromRGBA(fg[0], fg[1], fg[2], fg[3]);
+        this->fg[i] = (sfColor){color.r, color.g, color.b, color.a};
 }
 
 void
-RLTile_set_bg(RLTile *this, uint8_t bg[4])
+rl_tile_bg(rl_tile *this, rl_color color)
 {
-    if (!this || !bg)
+    if (!this)
         return;
 
     for (size_t i = 0; i < 4; ++i)
-        this->bg[i] = sfColor_fromRGBA(bg[0], bg[1], bg[2], bg[3]);
+        this->bg[i] = (sfColor){color.r, color.g, color.b, color.a};
 }
 
 void
-RLTile_set_type(RLTile *this, RLTileType type)
+rl_tile_type(rl_tile *this, rl_tileType type)
 {
     if (!this)
         return;
@@ -537,7 +648,7 @@ RLTile_set_type(RLTile *this, RLTileType type)
 }
 
 void
-RLTile_set_right(RLTile *this, float right)
+rl_tile_right(rl_tile *this, float right)
 {
     if (!this)
         return;
@@ -546,7 +657,7 @@ RLTile_set_right(RLTile *this, float right)
 }
 
 void
-RLTile_set_bottom(RLTile *this, float bottom)
+rl_tile_bottom(rl_tile *this, float bottom)
 {
     if (!this)
         return;
@@ -555,7 +666,7 @@ RLTile_set_bottom(RLTile *this, float bottom)
 }
 
 void
-RLTile_cleanup(RLTile *this)
+rl_tile_cleanup(rl_tile *this)
 {
     if (!this)
         return;
@@ -563,24 +674,28 @@ RLTile_cleanup(RLTile *this)
     free(this);
 }
 
+/******************************************************************************
+rl_tilemap function implementations
+******************************************************************************/
+
 static void
-RLTileMap_check_glyph(RLTileMap *this, wchar_t glyph)
+rl_tilemap_check_glyph(rl_tilemap *this, wchar_t glyph)
 {
     if (!this)
         return;
 
-    if (!glyphs[(size_t)glyph] &&
-        (glyphs[(size_t)glyph] = malloc(sizeof(sfGlyph))))
+    if (!this->glyphs[(size_t)glyph] &&
+        (this->glyphs[(size_t)glyph] = malloc(sizeof(sfGlyph))))
     {
-        *glyphs[(size_t)glyph] = sfFont_getGlyph(this->font, (uint32_t)glyph,
-            this->chrsize, false, 0.0f);
+        *(this->glyphs[(size_t)glyph]) = sfFont_getGlyph(this->font,
+            (unsigned)glyph, (unsigned)this->chrsize, false, 0.0f);
     }
 }
 
 static void
-RLTileMap_gen_tile(RLTileMap *this, RLTile *tile, uint32_t x, uint32_t y)
+rl_tilemap_gen_tile(rl_tilemap *this, rl_tile *tile, int x, int y)
 {
-    uint32_t index;
+    int index;
     sfIntRect rect;
     sfFloatRect bounds;
     float right = 0.0f, bottom = 0.0f;
@@ -588,26 +703,26 @@ RLTileMap_gen_tile(RLTileMap *this, RLTile *tile, uint32_t x, uint32_t y)
     if (!this || !tile)
         return;
 
-    RLTileMap_check_glyph(this, tile->glyph);
-    rect = glyphs[(size_t)(tile->glyph)]->textureRect;
+    rl_tilemap_check_glyph(this, tile->glyph);
+    rect = this->glyphs[(size_t)(tile->glyph)]->textureRect;
 
     switch (tile->type)
     {
-    case RLTILE_TEXT:
+    case RL_TILE_TEXT:
 
-        bounds = glyphs[(size_t)(tile->glyph)]->bounds;
+        bounds = this->glyphs[(size_t)(tile->glyph)]->bounds;
 
         right = bounds.left;
         bottom = (float)(this->offsety) + bounds.top;
         break;
 
-    case RLTILE_EXACT:
+    case RL_TILE_EXACT:
 
         right = tile->right;
         bottom = tile->bottom;
         break;
 
-    case RLTILE_FLOOR:
+    case RL_TILE_FLOOR:
 
         right = (float)((int)(((float)(this->offsetx) -
             (float)(rect.width))/2.0f));
@@ -615,7 +730,7 @@ RLTileMap_gen_tile(RLTileMap *this, RLTile *tile, uint32_t x, uint32_t y)
             (float)(rect.height)));
         break;
 
-    case RLTILE_CENTER:
+    case RL_TILE_CENTER:
 
         right = (float)((int)(((float)(this->offsetx) -
             (float)(rect.width))/2.0f));
@@ -625,104 +740,104 @@ RLTileMap_gen_tile(RLTileMap *this, RLTile *tile, uint32_t x, uint32_t y)
 
     }
 
-    index = RLTileMap_get_index(this, x, y);
+    index = rl_tilemap_get_index(this, x, y);
 
-    RLTileMap_gen_fg(this, index, tile, x, y, right, bottom, &rect);
-    RLTileMap_gen_bg(this, index, tile, x, y);
+    rl_tilemap_gen_fg(this, index, tile, x, y, right, bottom, &rect);
+    rl_tilemap_gen_bg(this, index, tile, x, y);
 }
 
 static void
-RLTileMap_gen_fg(RLTileMap *this, uint32_t index, RLTile *tile, uint32_t x,
-    uint32_t y, float r, float b, sfIntRect *rect)
+rl_tilemap_gen_fg(rl_tilemap *this, int index, rl_tile *tile, int x,
+    int y, float r, float b, sfIntRect *rect)
 {
+    size_t vindex = (size_t)index * 4;
+
     if (!this || !tile || !rect)
         return;
 
-    index *= 4;
-
-    sfVertexArray_getVertex(this->fg, index)->position = (sfVector2f){
+    sfVertexArray_getVertex(this->fg, vindex)->position = (sfVector2f){
         (float)x * (float)(this->offsetx) + r,
         (float)y * (float)(this->offsety) + b
     };
 
-    sfVertexArray_getVertex(this->fg, index + 1)->position = (sfVector2f){
+    sfVertexArray_getVertex(this->fg, vindex + 1)->position = (sfVector2f){
         (float)x * (float)(this->offsetx) + (float)(rect->width) + r,
         (float)y * (float)(this->offsety) + b
     };
 
-    sfVertexArray_getVertex(this->fg, index + 2)->position = (sfVector2f){
+    sfVertexArray_getVertex(this->fg, vindex + 2)->position = (sfVector2f){
         (float)x * (float)(this->offsetx) + (float)(rect->width) + r,
         (float)y * (float)(this->offsety) + (float)(rect->height) + b
     };
 
-    sfVertexArray_getVertex(this->fg, index + 3)->position = (sfVector2f){
+    sfVertexArray_getVertex(this->fg, vindex + 3)->position = (sfVector2f){
         (float)x * (float)(this->offsetx) + r,
         (float)y * (float)(this->offsety) + (float)(rect->height) + b
     };
 
-    sfVertexArray_getVertex(this->fg, index)->texCoords = (sfVector2f){
+    sfVertexArray_getVertex(this->fg, vindex)->texCoords = (sfVector2f){
         (float)(rect->left),
         (float)(rect->top)
     };
 
-    sfVertexArray_getVertex(this->fg, index + 1)->texCoords = (sfVector2f){
+    sfVertexArray_getVertex(this->fg, vindex + 1)->texCoords = (sfVector2f){
         (float)(rect->left) + (float)(rect->width),
         (float)(rect->top)
     };
 
-    sfVertexArray_getVertex(this->fg, index + 2)->texCoords = (sfVector2f){
+    sfVertexArray_getVertex(this->fg, vindex + 2)->texCoords = (sfVector2f){
         (float)(rect->left) + (float)(rect->width),
         (float)(rect->top) + (float)(rect->height)
     };
 
-    sfVertexArray_getVertex(this->fg, index + 3)->texCoords = (sfVector2f){
+    sfVertexArray_getVertex(this->fg, vindex + 3)->texCoords = (sfVector2f){
         (float)(rect->left),
         (float)(rect->top) + (float)(rect->height)
     };
 
-    sfVertexArray_getVertex(this->fg, index)->color = tile->fg[0];
-    sfVertexArray_getVertex(this->fg, index + 1)->color = tile->fg[1];
-    sfVertexArray_getVertex(this->fg, index + 2)->color = tile->fg[2];
-    sfVertexArray_getVertex(this->fg, index + 3)->color = tile->fg[3];
+    sfVertexArray_getVertex(this->fg, vindex)->color = tile->fg[0];
+    sfVertexArray_getVertex(this->fg, vindex + 1)->color = tile->fg[1];
+    sfVertexArray_getVertex(this->fg, vindex + 2)->color = tile->fg[2];
+    sfVertexArray_getVertex(this->fg, vindex + 3)->color = tile->fg[3];
 }
 
 static void
-RLTileMap_gen_bg(RLTileMap *this, uint32_t index, RLTile *tile, uint32_t x,
-    uint32_t y)
+rl_tilemap_gen_bg(rl_tilemap *this, int index, rl_tile *tile, int x,
+    int y)
 {
+    size_t vindex = (size_t)index * 4;
+
     if (!this || !tile)
         return;
 
-    index *= 4;
-
-    sfVertexArray_getVertex(this->bg, index)->position = (sfVector2f){
+    sfVertexArray_getVertex(this->bg, vindex)->position = (sfVector2f){
         (float)x * (float)(this->offsetx),
         (float)y * (float)(this->offsety)
     };
 
-    sfVertexArray_getVertex(this->bg, index + 1)->position = (sfVector2f){
+    sfVertexArray_getVertex(this->bg, vindex + 1)->position = (sfVector2f){
         (float)x * (float)(this->offsetx) + (float)(this->offsetx),
         (float)y * (float)(this->offsety)
     };
 
-    sfVertexArray_getVertex(this->bg, index + 2)->position = (sfVector2f){
+    sfVertexArray_getVertex(this->bg, vindex + 2)->position = (sfVector2f){
         (float)x * (float)(this->offsetx) + (float)(this->offsetx),
         (float)y * (float)(this->offsety) + (float)(this->offsety)
     };
 
-    sfVertexArray_getVertex(this->bg, index + 3)->position = (sfVector2f){
+    sfVertexArray_getVertex(this->bg, vindex + 3)->position = (sfVector2f){
         (float)x * (float)(this->offsetx),
         (float)y * (float)(this->offsety) + (float)(this->offsety)
     };
 
-    sfVertexArray_getVertex(this->bg, index)->color = tile->bg[0];
-    sfVertexArray_getVertex(this->bg, index + 1)->color = tile->bg[1];
-    sfVertexArray_getVertex(this->bg, index + 2)->color = tile->bg[2];
-    sfVertexArray_getVertex(this->bg, index + 3)->color = tile->bg[3];
+    sfVertexArray_getVertex(this->bg, vindex)->color = tile->bg[0];
+    sfVertexArray_getVertex(this->bg, vindex + 1)->color = tile->bg[1];
+    sfVertexArray_getVertex(this->bg, vindex + 2)->color = tile->bg[2];
+    sfVertexArray_getVertex(this->bg, vindex + 3)->color = tile->bg[3];
 }
 
-static uint32_t
-RLTileMap_get_index(RLTileMap *this, uint32_t x, uint32_t y)
+static int
+rl_tilemap_get_index(rl_tilemap *this, int x, int y)
 {
     if (!this)
         return 0;
@@ -730,13 +845,13 @@ RLTileMap_get_index(RLTileMap *this, uint32_t x, uint32_t y)
     return (y * this->width) + x;
 }
 
-RLTileMap *
-RLTileMap_create(const char *font, uint32_t chrsize, uint32_t offsetx,
-    uint32_t offsety, uint32_t width, uint32_t height)
+rl_tilemap *
+rl_tilemap_create(const char *font, int chrsize, int width,
+    int height, int offsetx, int offsety)
 {
-    RLTileMap *this = NULL;
+    rl_tilemap *this = NULL;
 
-    if (!(this = malloc(sizeof(RLTileMap))))
+    if (!(this = malloc(sizeof(rl_tilemap))))
         return NULL;
 
     if (!(this->font = sfFont_createFromFile(font)))
@@ -753,7 +868,7 @@ RLTileMap_create(const char *font, uint32_t chrsize, uint32_t offsetx,
         return NULL;
     }
 
-    sfVertexArray_resize(this->fg, width * height * 4);
+    sfVertexArray_resize(this->fg, (unsigned)(width * height * 4));
     sfVertexArray_setPrimitiveType(this->fg, sfQuads);
 
     if (!(this->bg = sfVertexArray_create()))
@@ -765,29 +880,44 @@ RLTileMap_create(const char *font, uint32_t chrsize, uint32_t offsetx,
         return NULL;
     }
 
-    sfVertexArray_resize(this->bg, width * height * 4);
+    sfVertexArray_resize(this->bg, (unsigned)(width * height * 4));
     sfVertexArray_setPrimitiveType(this->bg, sfQuads);
 
+    this->posx = 0.0f;
+    this->posy = 0.0f;
     this->width = width;
     this->height = height;
+    this->chrsize = chrsize;
     this->offsetx = offsetx;
     this->offsety = offsety;
-    this->chrsize = chrsize;
+
+    for (size_t i = 0; i < 65536; ++i)
+        this->glyphs[i] = NULL;
 
     return this;
 }
 
 void
-RLTileMap_put_tile(RLTileMap *this, RLTile *tile, uint32_t x, uint32_t y)
+rl_tilemap_pos(rl_tilemap *this, float x, float y)
+{
+    if (!this)
+        return;
+
+    this->posx = x;
+    this->posy = y;
+}
+
+void
+rl_tilemap_put_tile(rl_tilemap *this, rl_tile *tile, int x, int y)
 {
     if (!this || !tile)
         return;
 
-    RLTileMap_gen_tile(this, tile, x, y);
+    rl_tilemap_gen_tile(this, tile, x, y);
 }
 
 void
-RLTileMap_cleanup(RLTileMap *this)
+rl_tilemap_cleanup(rl_tilemap *this)
 {
     if (!this)
         return;
@@ -801,6 +931,40 @@ RLTileMap_cleanup(RLTileMap *this)
     if (this->bg)
         sfVertexArray_destroy(this->bg);
 
+    for (size_t i = 0; i < 65536; ++i)
+        if (this->glyphs[i]) free(this->glyphs[i]);
+
     if (this)
         free(this);
 }
+
+int
+rl_tilemap_mouse_x(rl_tilemap *this, rl_display *disp)
+{
+    if (!this || !disp || !disp->window.handle)
+        return 0;
+
+    return rl_display_mouse_x(disp) / this->offsetx;
+}
+
+int
+rl_tilemap_mouse_y(rl_tilemap *this, rl_display *disp)
+{
+    if (!this || !disp || !disp->window.handle)
+        return 0;
+
+    return rl_display_mouse_y(disp) / this->offsety;
+}
+
+void
+rl_tilemap_mouse(rl_tilemap *this, rl_display *disp, int *x, int *y)
+{
+    if (!this || !disp || !disp->window.handle || !x || !y)
+        return;
+
+    rl_display_mouse(disp, x, y);
+    
+    *x /= this->offsetx;
+    *y /= this->offsety;
+}
+

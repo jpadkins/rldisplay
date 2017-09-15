@@ -1,169 +1,216 @@
 #ifndef RLDISPLAY_H
 #define RLDISPLAY_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <wchar.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-// RLDisplay
+/******************************************************************************
+Structs
+******************************************************************************/
 
-typedef struct _RLDisplay RLDisplay;
-typedef struct _RLTileMap RLTileMap;
-typedef struct _RLTile RLTile;
+typedef struct rl_tile rl_tile;
+typedef struct rl_tilemap rl_tilemap;
+typedef struct rl_display rl_display;
+typedef struct { uint8_t r; uint8_t g; uint8_t b; uint8_t a; } rl_color;
+
+/******************************************************************************
+Enums
+******************************************************************************/
 
 typedef enum {
-    RLTILE_TEXT,
-    RLTILE_EXACT,
-    RLTILE_FLOOR,
-    RLTILE_CENTER
-} RLTileType;
+    RL_TILE_TEXT,
+    RL_TILE_EXACT,
+    RL_TILE_FLOOR,
+    RL_TILE_CENTER
+} rl_tileType;
 
 typedef enum {
-    RLDISPLAY_KEY_A,
-    RLDISPLAY_KEY_B,
-    RLDISPLAY_KEY_C,
-    RLDISPLAY_KEY_D,
-    RLDISPLAY_KEY_E,
-    RLDISPLAY_KEY_F,
-    RLDISPLAY_KEY_G,
-    RLDISPLAY_KEY_H,
-    RLDISPLAY_KEY_I,
-    RLDISPLAY_KEY_J,
-    RLDISPLAY_KEY_K,
-    RLDISPLAY_KEY_L,
-    RLDISPLAY_KEY_M,
-    RLDISPLAY_KEY_N,
-    RLDISPLAY_KEY_O,
-    RLDISPLAY_KEY_P,
-    RLDISPLAY_KEY_Q,
-    RLDISPLAY_KEY_R,
-    RLDISPLAY_KEY_S,
-    RLDISPLAY_KEY_T,
-    RLDISPLAY_KEY_U,
-    RLDISPLAY_KEY_V,
-    RLDISPLAY_KEY_W,
-    RLDISPLAY_KEY_X,
-    RLDISPLAY_KEY_Y,
-    RLDISPLAY_KEY_Z,
-    RLDISPLAY_KEY_0,
-    RLDISPLAY_KEY_1,
-    RLDISPLAY_KEY_2,
-    RLDISPLAY_KEY_3,
-    RLDISPLAY_KEY_4,
-    RLDISPLAY_KEY_5,
-    RLDISPLAY_KEY_6,
-    RLDISPLAY_KEY_7,
-    RLDISPLAY_KEY_8,
-    RLDISPLAY_KEY_9,
-    RLDISPLAY_KEY_ESCAPE,
-    RLDISPLAY_KEY_CONTROL,
-    RLDISPLAY_KEY_SHIFT,
-    RLDISPLAY_KEY_ALT,
-    RLDISPLAY_KEY_SYSTEM,
-    RLDISPLAY_KEY_SEMICOLON,
-    RLDISPLAY_KEY_COMMA,
-    RLDISPLAY_KEY_PERIOD,
-    RLDISPLAY_KEY_QUOTE,
-    RLDISPLAY_KEY_SLASH,
-    RLDISPLAY_KEY_TILDE,
-    RLDISPLAY_KEY_SPACE,
-    RLDISPLAY_KEY_ENTER,
-    RLDISPLAY_KEY_BACKSPACE,
-    RLDISPLAY_KEY_TAB,
-    RLDISPLAY_KEY_UP,
-    RLDISPLAY_KEY_DOWN,
-    RLDISPLAY_KEY_LEFT,
-    RLDISPLAY_KEY_RIGHT,
+    RL_DISPLAY_KEY_A,
+    RL_DISPLAY_KEY_B,
+    RL_DISPLAY_KEY_C,
+    RL_DISPLAY_KEY_D,
+    RL_DISPLAY_KEY_E,
+    RL_DISPLAY_KEY_F,
+    RL_DISPLAY_KEY_G,
+    RL_DISPLAY_KEY_H,
+    RL_DISPLAY_KEY_I,
+    RL_DISPLAY_KEY_J,
+    RL_DISPLAY_KEY_K,
+    RL_DISPLAY_KEY_L,
+    RL_DISPLAY_KEY_M,
+    RL_DISPLAY_KEY_N,
+    RL_DISPLAY_KEY_O,
+    RL_DISPLAY_KEY_P,
+    RL_DISPLAY_KEY_Q,
+    RL_DISPLAY_KEY_R,
+    RL_DISPLAY_KEY_S,
+    RL_DISPLAY_KEY_T,
+    RL_DISPLAY_KEY_U,
+    RL_DISPLAY_KEY_V,
+    RL_DISPLAY_KEY_W,
+    RL_DISPLAY_KEY_X,
+    RL_DISPLAY_KEY_Y,
+    RL_DISPLAY_KEY_Z,
+    RL_DISPLAY_KEY_0,
+    RL_DISPLAY_KEY_1,
+    RL_DISPLAY_KEY_2,
+    RL_DISPLAY_KEY_3,
+    RL_DISPLAY_KEY_4,
+    RL_DISPLAY_KEY_5,
+    RL_DISPLAY_KEY_6,
+    RL_DISPLAY_KEY_7,
+    RL_DISPLAY_KEY_8,
+    RL_DISPLAY_KEY_9,
+    RL_DISPLAY_KEY_ESCAPE,
+    RL_DISPLAY_KEY_CONTROL,
+    RL_DISPLAY_KEY_SHIFT,
+    RL_DISPLAY_KEY_ALT,
+    RL_DISPLAY_KEY_SYSTEM,
+    RL_DISPLAY_KEY_SEMICOLON,
+    RL_DISPLAY_KEY_COMMA,
+    RL_DISPLAY_KEY_PERIOD,
+    RL_DISPLAY_KEY_QUOTE,
+    RL_DISPLAY_KEY_SLASH,
+    RL_DISPLAY_KEY_TILDE,
+    RL_DISPLAY_KEY_SPACE,
+    RL_DISPLAY_KEY_ENTER,
+    RL_DISPLAY_KEY_BACKSPACE,
+    RL_DISPLAY_KEY_TAB,
+    RL_DISPLAY_KEY_UP,
+    RL_DISPLAY_KEY_DOWN,
+    RL_DISPLAY_KEY_LEFT,
+    RL_DISPLAY_KEY_RIGHT,
+    RL_DISPLAY_KEY_MOUSELEFT,
+    RL_DISPLAY_KEY_MOUSERIGHT,
+    RL_DISPLAY_KEY_MOUSEMIDDLE,
 
-    RLDISPLAY_KEY_MAXIMUM
-} RLDisplayKey;
+    RL_DISPLAY_KEY_MAXIMUM
+} rl_displaykey;
 
-extern RLDisplay *
-RLDisplay_create(uint32_t winw, uint32_t winh, char *title, bool fscreen,
-    uint32_t framew, uint32_t frameh);
+/******************************************************************************
+rl_display function declarations
+******************************************************************************/
 
-extern void
-RLDisplay_fscreen(RLDisplay *this, bool fscreen);
-
-extern void
-RLDisplay_resize(RLDisplay *this, uint32_t width, uint32_t height);
-
-extern void
-RLDisplay_rename(RLDisplay *this, const char *title);
+extern rl_display *
+rl_display_create(int windoww, int windowh, int framew,
+    int frameh, char *title, bool fscreen);
 
 extern void
-RLDisplay_vsync(RLDisplay *this, bool enabled);
+rl_display_fscreen(rl_display *this, bool fscreen);
 
 extern void
-RLDisplay_cursor(RLDisplay *this, bool visible);
+rl_display_resize(rl_display *this, int width, int height);
 
 extern void
-RLDisplay_framerate(RLDisplay *this, uint32_t limit);
+rl_display_rename(rl_display *this, const char *title);
 
 extern void
-RLDisplay_cleanup(RLDisplay *this);
+rl_display_vsync(rl_display *this, bool enabled);
+
+extern void
+rl_display_cursor(rl_display *this, bool visible);
+
+extern void
+rl_display_fps_limit(rl_display *this, int limit);
+
+extern void
+rl_display_cleanup(rl_display *this);
 
 extern bool
-RLDisplay_status(RLDisplay *this);
+rl_display_status(rl_display *this);
 
 extern void
-RLDisplay_events_flush(RLDisplay *this);
+rl_display_events_flush(rl_display *this);
 
 extern void
-RLDisplay_clear(RLDisplay *this);
+rl_display_clear(rl_display *this);
 
 extern void
-RLDisplay_clear_color(RLDisplay *this, uint8_t rgba[4]);
+rl_display_clear_color(rl_display *this, rl_color color);
 
 extern void
-RLDisplay_draw_tilemap(RLDisplay *this, RLTileMap *tmap, float x, float y);
+rl_display_draw_tilemap(rl_display *this, rl_tilemap *tmap);
 
 extern void
-RLDisplay_present(RLDisplay *this);
+rl_display_present(rl_display *this);
 
 extern bool
-RLDisplay_key_pressed(RLDisplay *this, RLDisplayKey key);
+rl_display_key_pressed(rl_display *this, rl_displaykey key);
 
-// RLTile
+extern int
+rl_display_mouse_x(rl_display *this);
 
-extern RLTile *
-RLTile_create(wchar_t glyph, uint8_t fg[4], uint8_t bg[4], RLTileType type,
+extern int
+rl_display_mouse_y(rl_display *this);
+
+extern void
+rl_display_mouse(rl_display *this, int *x, int *y);
+
+/******************************************************************************
+rl_tile function declarations
+******************************************************************************/
+
+extern rl_tile *
+rl_tile_create(wchar_t glyph, rl_color fg, rl_color bg, rl_tileType type,
     float right, float bottom);
 
-extern RLTile *
-RLTile_default(void);
+extern rl_tile *
+rl_tile_default(void);
 
 extern void
-RLTile_set_glyph(RLTile *this, wchar_t glyph);
+rl_tile_glyph(rl_tile *this, wchar_t glyph);
 
 extern void
-RLTile_set_fg(RLTile *this, uint8_t fg[4]);
+rl_tile_fg(rl_tile *this, rl_color color);
 
 extern void
-RLTile_set_bg(RLTile *this, uint8_t fg[4]);
+rl_tile_bg(rl_tile *this, rl_color color);
 
 extern void
-RLTile_set_type(RLTile *this, RLTileType type);
+rl_tile_type(rl_tile *this, rl_tileType type);
 
 extern void
-RLTile_set_right(RLTile *this, float right);
+rl_tile_right(rl_tile *this, float right);
 
 extern void
-RLTile_set_bottom(RLTile *this, float bottom);
+rl_tile_bottom(rl_tile *this, float bottom);
 
 extern void
-RLTile_cleanup(RLTile *this);
+rl_tile_cleanup(rl_tile *this);
 
-// RLTileMap 
+/******************************************************************************
+rl_tilemap function declarations
+******************************************************************************/
 
-extern RLTileMap *
-RLTileMap_create(const char *font, uint32_t chrsize, uint32_t offsetx,
-    uint32_t offsety, uint32_t width, uint32_t height);
+extern rl_tilemap *
+rl_tilemap_create(const char *font, int chrsize, int width,
+    int height, int offsetx, int offsety);
 
 extern void
-RLTileMap_put_tile(RLTileMap *this, RLTile *tile, uint32_t x, uint32_t y);
+rl_tilemap_pos(rl_tilemap *this, float x, float y);
 
 extern void
-RLTileMap_cleanup(RLTileMap *this);
+rl_tilemap_put_tile(rl_tilemap *this, rl_tile *tile, int x, int y);
+
+extern void
+rl_tilemap_cleanup(rl_tilemap *this);
+
+extern int
+rl_tilemap_mouse_x(rl_tilemap *this, rl_display *disp);
+
+extern int
+rl_tilemap_mouse_y(rl_tilemap *this, rl_display *disp);
+
+extern void
+rl_tilemap_mouse(rl_tilemap *this, rl_display *disp, int *x, int *y);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* RLDISPLAY_H */
