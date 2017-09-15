@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "rl_display.h"
+#include "rldisp.h"
 
 int main(void)
 {
@@ -13,32 +13,31 @@ int main(void)
     int mousex = -1, mousey = -1;
     wchar_t *wstr = L"Hello World!\0";
 
-    rl_tile *tile = NULL;
-    rl_display *disp = NULL;
-    rl_tilemap *tmap = NULL;
-    rl_color color = { 0, 0, 0, 255 };
-    rl_color fg = { 255, 255, 255, 255};
+    rltile *tile = NULL;
+    rldisp *disp = NULL;
+    rltmap *tmap = NULL;
+    rlhue color = { 0, 0, 0, 255 };
+    rlhue fg = { 255, 255, 255, 255};
 
     srand((unsigned)time(NULL));
 
-    if (!(disp = rl_display_create(1280, 720, 800, 576, "window", false)))
+    if (!(disp = rldisp_init(1280, 720, 800, 576, "window", false)))
     {
         result = EXIT_FAILURE;
         goto cleanup;
     }
 
-    rl_display_vsync(disp, true);
-    rl_display_cursor(disp, true);
-    rl_display_fps_limit(disp, 60);
-    rl_display_clear_color(disp, color);
+    rldisp_fpslim(disp, 60);
+    rldisp_vsync(disp, true);
+    rldisp_shwcur(disp, true);
+    rldisp_clrhue(disp, color);
 
-    if (!(tmap = rl_tilemap_create("res/fonts/unifont.ttf", 16, 50, 36, 16,
-        16)))
+    if (!(tmap = rltmap_init("res/fonts/unifont.ttf", 16, 50, 36, 16, 16)))
     {
         result = EXIT_FAILURE;
         goto cleanup;
     }
-    else if (!(tile = rl_tile_default()))
+    else if (!(tile = rltile_null()))
     {
         result = EXIT_FAILURE;
         goto cleanup;
@@ -48,21 +47,21 @@ int main(void)
     {
         for (int j = 0; j < 36; ++j)
         {
-            rl_tilemap_tile(tmap, tile, i, j);
+            rltmap_tile(tmap, tile, i, j);
         }
     }
 
-    rl_tilemap_wstr_down(tmap, wstr, fg, color, RL_TILE_CENTER, 0, 1);
-    rl_tilemap_wstr_right(tmap, wstr, fg, color, RL_TILE_CENTER, 0, 0);
+    rltmap_wstrd(tmap, wstr, fg, color, RL_TILE_CENTER, 0, 1);
+    rltmap_wstrr(tmap, wstr, fg, color, RL_TILE_CENTER, 0, 0);
 
-    while (rl_display_status(disp) && run)
+    while (rldisp_status(disp) && run)
     {
-        rl_display_events_flush(disp);
+        rldisp_evtflsh(disp);
 
-        if (rl_display_key_pressed(disp, RL_KEY_ESCAPE))
+        if (rldisp_key(disp, RL_KEY_ESCAPE))
             run = false;
 
-        rl_tilemap_mouse(tmap, disp, &mousex, &mousey);
+        rltmap_mous(tmap, disp, &mousex, &mousey);
 
         if (mousex >= 0 && mousex < 50 && mousey >= 0 && mousey < 36)
         {
@@ -70,29 +69,28 @@ int main(void)
             color.g = (uint8_t)(rand() % 255);
             color.b = (uint8_t)(rand() % 255);
 
-            rl_tile_fg(tile, color);
+            rltile_fg(tile, color);
 
             color.r = (uint8_t)(rand() % 255);
             color.g = (uint8_t)(rand() % 255);
             color.b = (uint8_t)(rand() % 255);
 
-            rl_tile_bg(tile, color);
+            rltile_bg(tile, color);
 
-            rl_tile_glyph(tile, (wchar_t)(rand() % 128));
+            rltile_chr(tile, (wchar_t)(rand() % 128));
 
-            rl_tilemap_tile(tmap, tile, rl_tilemap_mouse_x(tmap, disp),
-                rl_tilemap_mouse_y(tmap, disp));
+            rltmap_tile(tmap, tile, mousex, mousey);
         }
 
-        rl_display_clear(disp);
-        rl_display_draw_tilemap(disp, tmap);
-        rl_display_present(disp);
+        rldisp_clr(disp);
+        rldisp_drtmap(disp, tmap);
+        rldisp_prsnt(disp);
     }
 
 cleanup:
-    if (tmap) rl_tilemap_cleanup(tmap);
-    if (disp) rl_display_cleanup(disp);
-    if (tile) rl_tile_cleanup(tile);
+    if (tile) rltile_free(tile);
+    if (tmap) rltmap_free(tmap);
+    if (disp) rldisp_free(disp);
 
     return result;
 }
