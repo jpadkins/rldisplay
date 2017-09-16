@@ -6,14 +6,19 @@ interface is generic across backends.
 
 ## Installation
 
-For now, copy `src/rl_display.h` and the implementation file of your choosing
-into your project. Currently only the CSFML implementation
-(`src/rl_display_sfml.c`) is available, so you'll need to link to the CFML
-library. CSFML is available in the package managers for most \*nix, homebrew
-on macOS, or can be downloaded directly from the project's website prebuilt for
-Windows or the source code for \*BSD: [link.](https://www.sfml-dev.org/download/csfml/)
+For now, copy [src/rl_display.h](src/rl_display.h) and the implementation file
+of your choosing into your project. Currently only the CSFML implementation
+[src/rl_display_sfml.c](src/rl_display_sfml.c) is available, so you'll need to
+link to the CFML library. CSFML is available in the package managers for most
+\*nix, homebrew on macOS, or can be downloaded directly from the project's
+website prebuilt for Windows or the source code for \*BSD:
+[link.](https://www.sfml-dev.org/download/csfml/)
 
 Once stabilized, a header-only version of roguelike_display will be generated.
+
+## Documentation
+
+Doxygen documentation can be found inline in [src/rl_display.h](src/rl_display.h).
 
 ## Why
 
@@ -34,14 +39,14 @@ the SDL2 Renderer with SDL\_TTF.
 ...
 
 bool run = true;
-rltile *tile = NULL;
 rldisp *disp = NULL;
 rltmap *tmap = NULL;
+rltile *tile = NULL;
 rlhue black = {0, 0, 0, 255};
 rlhue red = {255, 0, 0, 255};
 rlhue blue = {0, 0, 255, 255};
 
-/* 1280x720 is the window size, 800x576 is the frame size which is stretched
+/* 1280x720 is the window size and 800x576 is the frame size which is stretched
  * to the window. The third parameter specifies the window title and the fourth
  * specifies whether or not the window is fullscreen.
  */
