@@ -34,45 +34,58 @@ the SDL2 Renderer with SDL\_TTF.
 ...
 
 bool run = true;
-RLTile *tile = NULL;
-RLDisplay *disp = NULL;
-RLTileMap *tmap = NULL;
-uint8_t fg_color[4] = {255, 0, 0, 255};
-uint8_t bg_color[4] = {0, 0, 255, 255};
+rltile *tile = NULL;
+rldisp *disp = NULL;
+rltmap *tmap = NULL;
+rlhue black = {0, 0, 0, 255};
+rlhue red = {255, 0, 0, 255};
+rlhue blue = {0, 0, 255, 255};
 
 /* 1280x720 is the window size, 800x576 is the frame size which is stretched
  * to the window. The third parameter specifies the window title and the fourth
  * specifies whether or not the window is fullscreen.
  */
-if (!(disp = RLDisplay_create(1280, 720, "title", false, 800, 576)))
+if (!(disp = rldisp_init(1280, 720, 800, 576, "roguelike display", false)))
     goto cleanup;
 
-/* RLTileMaps are grids of characters with the same character size and spacing.
- * For this RLTileMap, the character size is 16, as well as the x and y spacing.
+/* You can set many window options */
+rldisp_fpslim(disp, 60);
+rldisp_vsync(disp, true);
+rldisp_shwcur(disp, true);
+rldisp_clrhue(disp, black);
+
+/* rltmaps are grids of characters with the same character size and spacing.
+ * For this rltmap, the character size is 16, as well as the x and y spacing.
  * 50x36 are the dimensions of the map.
  */
-else if (!(tmap = RLTileMap_create("res/fonts/unifont.ttf", 16, 16, 16, 50, 36)))
+if (!(tmap = rltmap_init("res/fonts/unifont.ttf", 16, 50, 36, 16, 16)))
     goto cleanup;
 
-/* When you create a tile, you specify the type. Either RLTILE_TEXT, RLTILE_EXACT,
- * RLTILE_FLOOR, RLTILE_CENTER. If the type is RLTILE_EXACT, then the last two
+/* When you create a tile, you specify the type. Either RL_TILE_TEXT, RL_TILE_EXACT,
+ * RL_TILE_FLOOR, RL_TILE_CENTER. If the type is RL_TILE_EXACT, then the last two
  * parameters specify the right and down offset of the glyph from the top-left.
  */
-else if (!(tile = RLTile_create(L'╬', fg_color, bg_color, RLTILE_CENTER, 0.0f, 0.0f)))
+if (!(tile = rltile_init(L'╬', fg_color, bg_color, RLTILE_CENTER, 0.0f, 0.0f)))
     goto cleanup;
 
-RLTileMap_put_tile(tmap, tile, 0, 0);
+/* Update the rltmap's tile grid at coordinate 0x0 with data from tile */
+rltmap_tile(tmap, tile, 0, 0);
 
-while (RLDisplay_status(disp) && run)
+while (rldisp_status(disp) && run)
 {
-    RLDisplay_events_flush(disp);
+    /* Handle all window events */
+    rldisp_evtflsh(disp);
 
-    if (RLDisplay_key_pressed(disp, RLDISPLAY_KEY_ESCAPE))
+    /* Quit if escape is pressed */
+    if (rldisp_key(disp, RL_KEY_ESCAPE))
         run = false;
 
-    RLDisplay_clear(disp);
-    RLDisplay_draw_tilemap(disp, tmap, 0.0f, 0.0f);
-    RLDisplay_present(disp);
+    /* Clear the rldisp */
+    rldisp_clr(disp);
+    /* Draw the rltmap onto the rldisp's frame buffer */
+    rldisp_drtmap(disp, tmap, 0.0f, 0.0f);
+    /* Stretch the frame buffer to the window and finish rendering */
+    rldisp_prsnt(disp);
 }
 
 ...

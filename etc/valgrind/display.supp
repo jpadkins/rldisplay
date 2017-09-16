@@ -1,0 +1,876 @@
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   fun:_ZN2sf4priv10GlxContext13createContextEPS1_
+   fun:_ZN2sf4priv10GlxContextC1EPS1_
+   fun:_ZN2sf4priv9GlContext12initResourceEv
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   fun:_ZN2sf4priv10GlxContext13createContextEPS1_
+   fun:_ZN2sf4priv10GlxContextC1EPS1_
+   fun:_ZN2sf4priv9GlContext12initResourceEv
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   fun:_ZN2sf4priv10GlxContext13createContextEPS1_
+   fun:_ZN2sf4priv10GlxContextC1EPS1_
+   fun:_ZN2sf4priv9GlContext12initResourceEv
+   fun:_ZN2sf6WindowC1Ev
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   fun:_ZN2sf4priv10GlxContext13createContextEPS1_
+   fun:_ZN2sf4priv10GlxContextC1EPS1_
+   fun:_ZN2sf4priv9GlContext12initResourceEv
+   fun:_ZN2sf6WindowC1Ev
+   fun:_ZN2sf12RenderWindowC1Ev
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   fun:_ZN2sf4priv10GlxContext13createContextEPS1_
+   fun:_ZN2sf4priv10GlxContextC1EPS1_
+   fun:_ZN2sf4priv9GlContext12initResourceEv
+   fun:_ZN2sf6WindowC1Ev
+   fun:_ZN2sf12RenderWindowC1Ev
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   fun:_ZN2sf4priv10GlxContext13createContextEPS1_
+   fun:_ZN2sf4priv10GlxContextC1EPS1_
+   fun:_ZN2sf4priv9GlContext12initResourceEv
+   fun:_ZN2sf6WindowC1Ev
+   fun:_ZN2sf12RenderWindowC1Ev
+   fun:sfRenderWindow_create
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   fun:_ZN2sf4priv10GlxContext13createContextEPS1_
+   fun:_ZN2sf4priv10GlxContextC1EPS1_
+   fun:_ZN2sf4priv9GlContext12initResourceEv
+   fun:_ZN2sf6WindowC1Ev
+   fun:_ZN2sf12RenderWindowC1Ev
+   fun:sfRenderWindow_create
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX.so.0.0.0
+   obj:/usr/lib/libGLX.so.0.0.0
+   fun:_ZN2sf4priv10GlxContext11makeCurrentEb
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX.so.0.0.0
+   obj:/usr/lib/libGLX.so.0.0.0
+   fun:_ZN2sf4priv10GlxContext11makeCurrentEb
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX.so.0.0.0
+   obj:/usr/lib/libGLX.so.0.0.0
+   fun:_ZN2sf4priv10GlxContext11makeCurrentEb
+   fun:_ZN2sf4priv9GlContext9setActiveEb
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX.so.0.0.0
+   obj:/usr/lib/libGLX.so.0.0.0
+   fun:_ZN2sf4priv10GlxContext11makeCurrentEb
+   fun:_ZN2sf4priv9GlContext9setActiveEb
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX.so.0.0.0
+   obj:/usr/lib/libGLX.so.0.0.0
+   fun:_ZN2sf4priv10GlxContext11makeCurrentEb
+   fun:_ZN2sf4priv9GlContext9setActiveEb
+   fun:_ZN2sf4priv9GlContext12initResourceEv
+   fun:_ZN2sf6WindowC1Ev
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   fun:memmove
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   fun:memmove
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf7Texture6createEjj
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf7Texture6updateEPKhjjjj
+   fun:_ZN2sf7Texture13loadFromImageERKNS_5ImageERKNS_4RectIiEE
+   fun:_ZN2sf4Font4PageC1Ev
+   fun:pair<unsigned int const&, 0>
+   fun:pair<unsigned int const&>
+   fun:construct<std::pair<unsigned int const, sf::Font::Page>, const std::piecewise_construct_t&, std::tuple<unsigned int const&>, std::tuple<> >
+   fun:construct<std::pair<unsigned int const, sf::Font::Page>, const std::piecewise_construct_t&, std::tuple<unsigned int const&>, std::tuple<> >
+   fun:_M_construct_node<const std::piecewise_construct_t&, std::tuple<unsigned int const&>, std::tuple<> >
+   fun:_M_create_node<const std::piecewise_construct_t&, std::tuple<unsigned int const&>, std::tuple<> >
+   fun:_ZNSt8_Rb_treeIjSt4pairIKjN2sf4Font4PageEESt10_Select1stIS5_ESt4lessIjESaIS5_EE22_M_emplace_hint_uniqueIJRKSt21piecewise_construct_tSt5tupleIJRS1_EESG_IJEEEEESt17_Rb_tree_iteratorIS5_ESt23_Rb_tree_const_iteratorIS5_EDpOT_.isra.124
+   fun:operator[]
+   fun:_ZNK2sf4Font8getGlyphEjjbf
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf7Texture6updateEPKhjjjj
+   fun:_ZNK2sf4Font9loadGlyphEjjbf
+   fun:_ZNK2sf4Font8getGlyphEjjbf
+   fun:sfFont_getGlyph
+   fun:rltmap_chkchr
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   fun:memmove
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf7Texture6updateEPKhjjjj
+   fun:_ZNK2sf4Font9loadGlyphEjjbf
+   fun:_ZNK2sf4Font8getGlyphEjjbf
+   fun:sfFont_getGlyph
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr2
+   fun:memmove
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf7Texture6updateEPKhjjjj
+   fun:_ZNK2sf4Font9loadGlyphEjjbf
+   fun:_ZNK2sf4Font8getGlyphEjjbf
+   fun:sfFont_getGlyph
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr1
+   fun:memmove
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf7Texture6updateEPKhjjjj
+   fun:_ZNK2sf4Font9loadGlyphEjjbf
+   fun:_ZNK2sf4Font8getGlyphEjjbf
+   fun:sfFont_getGlyph
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget5clearERKNS_5ColorE
+   fun:sfRenderTexture_clear
+   fun:rldisp_clr
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   fun:memmove
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget5clearERKNS_5ColorE
+   fun:sfRenderTexture_clear
+   fun:rldisp_clr
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget5clearERKNS_5ColorE
+   fun:sfRenderTexture_clear
+   fun:rldisp_clr
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget5clearERKNS_5ColorE
+   fun:sfRenderTexture_clear
+   fun:rldisp_clr
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget5clearERKNS_5ColorE
+   fun:sfRenderTexture_clear
+   fun:rldisp_clr
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget5clearERKNS_5ColorE
+   fun:sfRenderTexture_clear
+   fun:rldisp_clr
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget5clearERKNS_5ColorE
+   fun:sfRenderTexture_clear
+   fun:rldisp_clr
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget5clearERKNS_5ColorE
+   fun:sfRenderTexture_clear
+   fun:rldisp_clr
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf7Texture6updateERKS0_jj
+   fun:_ZN2sf7TextureC1ERKS0_
+   fun:_ZN2sf7TextureaSERKS0_
+   fun:sfFont_getTexture
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf7Texture6updateERKS0_jj
+   fun:_ZN2sf7TextureC1ERKS0_
+   fun:_ZN2sf7TextureaSERKS0_
+   fun:sfFont_getTexture
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf7Texture6updateERKS0_jj
+   fun:_ZN2sf7TextureC1ERKS0_
+   fun:_ZN2sf7TextureaSERKS0_
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf7Texture6updateERKS0_jj
+   fun:_ZN2sf7TextureC1ERKS0_
+   fun:_ZN2sf7TextureaSERKS0_
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf7TextureC1ERKS0_
+   fun:_ZN2sf7TextureaSERKS0_
+   fun:sfFont_getTexture
+   fun:rldisp_drtmap
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   fun:bcmp
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget4drawEPKNS_6VertexEmNS_13PrimitiveTypeERKNS_12RenderStatesE
+   fun:_ZNK2sf11VertexArray4drawERNS_12RenderTargetENS_12RenderStatesE
+   fun:_ZN2sf12RenderTarget4drawERKNS_8DrawableERKNS_12RenderStatesE
+   fun:sfRenderTexture_drawVertexArray
+   fun:rldisp_drtmap
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget4drawEPKNS_6VertexEmNS_13PrimitiveTypeERKNS_12RenderStatesE
+   fun:_ZNK2sf11VertexArray4drawERNS_12RenderTargetENS_12RenderStatesE
+   fun:_ZN2sf12RenderTarget4drawERKNS_8DrawableERKNS_12RenderStatesE
+   fun:sfRenderTexture_drawVertexArray
+   fun:rldisp_drtmap
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget4drawEPKNS_6VertexEmNS_13PrimitiveTypeERKNS_12RenderStatesE
+   fun:_ZNK2sf11VertexArray4drawERNS_12RenderTargetENS_12RenderStatesE
+   fun:_ZN2sf12RenderTarget4drawERKNS_8DrawableERKNS_12RenderStatesE
+   fun:sfRenderTexture_drawVertexArray
+   fun:rldisp_drtmap
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget4drawEPKNS_6VertexEmNS_13PrimitiveTypeERKNS_12RenderStatesE
+   fun:_ZNK2sf11VertexArray4drawERNS_12RenderTargetENS_12RenderStatesE
+   fun:_ZN2sf12RenderTarget4drawERKNS_8DrawableERKNS_12RenderStatesE
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget4drawEPKNS_6VertexEmNS_13PrimitiveTypeERKNS_12RenderStatesE
+   fun:_ZNK2sf11VertexArray4drawERNS_12RenderTargetENS_12RenderStatesE
+   fun:_ZN2sf12RenderTarget4drawERKNS_8DrawableERKNS_12RenderStatesE
+   fun:sfRenderTexture_drawVertexArray
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr2
+   fun:memmove
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget4drawEPKNS_6VertexEmNS_13PrimitiveTypeERKNS_12RenderStatesE
+   fun:_ZNK2sf11VertexArray4drawERNS_12RenderTargetENS_12RenderStatesE
+   fun:_ZN2sf12RenderTarget4drawERKNS_8DrawableERKNS_12RenderStatesE
+   fun:sfRenderTexture_drawVertexArray
+   fun:rldisp_drtmap
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   fun:memmove
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget4drawEPKNS_6VertexEmNS_13PrimitiveTypeERKNS_12RenderStatesE
+   fun:_ZNK2sf11VertexArray4drawERNS_12RenderTargetENS_12RenderStatesE
+   fun:_ZN2sf12RenderTarget4drawERKNS_8DrawableERKNS_12RenderStatesE
+   fun:sfRenderTexture_drawVertexArray
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget4drawEPKNS_6VertexEmNS_13PrimitiveTypeERKNS_12RenderStatesE
+   fun:_ZNK2sf11VertexArray4drawERNS_12RenderTargetENS_12RenderStatesE
+   fun:_ZN2sf12RenderTarget4drawERKNS_8DrawableERKNS_12RenderStatesE
+   fun:sfRenderTexture_drawVertexArray
+   fun:rldisp_drtmap
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget4drawEPKNS_6VertexEmNS_13PrimitiveTypeERKNS_12RenderStatesE
+   fun:_ZNK2sf6Sprite4drawERNS_12RenderTargetENS_12RenderStatesE
+   fun:_ZN2sf12RenderTarget4drawERKNS_8DrawableERKNS_12RenderStatesE
+   fun:sfRenderWindow_drawSprite
+   fun:rldisp_prsnt
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget4drawEPKNS_6VertexEmNS_13PrimitiveTypeERKNS_12RenderStatesE
+   fun:_ZNK2sf6Sprite4drawERNS_12RenderTargetENS_12RenderStatesE
+   fun:_ZN2sf12RenderTarget4drawERKNS_8DrawableERKNS_12RenderStatesE
+   fun:sfRenderWindow_drawSprite
+   fun:rldisp_prsnt
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget4drawEPKNS_6VertexEmNS_13PrimitiveTypeERKNS_12RenderStatesE
+   fun:_ZNK2sf6Sprite4drawERNS_12RenderTargetENS_12RenderStatesE
+   fun:_ZN2sf12RenderTarget4drawERKNS_8DrawableERKNS_12RenderStatesE
+   fun:sfRenderWindow_drawSprite
+   fun:rldisp_prsnt
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr1
+   fun:memmove
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget4drawEPKNS_6VertexEmNS_13PrimitiveTypeERKNS_12RenderStatesE
+   fun:_ZNK2sf6Sprite4drawERNS_12RenderTargetENS_12RenderStatesE
+   fun:_ZN2sf12RenderTarget4drawERKNS_8DrawableERKNS_12RenderStatesE
+   fun:sfRenderWindow_drawSprite
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr2
+   fun:memmove
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget4drawEPKNS_6VertexEmNS_13PrimitiveTypeERKNS_12RenderStatesE
+   fun:_ZNK2sf6Sprite4drawERNS_12RenderTargetENS_12RenderStatesE
+   fun:_ZN2sf12RenderTarget4drawERKNS_8DrawableERKNS_12RenderStatesE
+   fun:sfRenderWindow_drawSprite
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   fun:_ZN2sf6Window7displayEv
+   fun:rldisp_prsnt
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   fun:memset
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf7Texture6createEjj
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf7Texture6updateEPKhjjjj
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf7Texture6updateEPKhjjjj
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf7Texture6updateEPKhjjjj
+   fun:_ZNK2sf4Font9loadGlyphEjjbf
+   fun:_ZNK2sf4Font8getGlyphEjjbf
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf7Texture6updateEPKhjjjj
+   fun:_ZNK2sf4Font9loadGlyphEjjbf
+   fun:_ZNK2sf4Font8getGlyphEjjbf
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf7Texture6updateEPKhjjjj
+   fun:_ZNK2sf4Font9loadGlyphEjjbf
+   fun:_ZNK2sf4Font8getGlyphEjjbf
+   fun:sfFont_getGlyph
+   fun:rltmap_chkchr
+   fun:rltmap_updtile
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   obj:/usr/lib/libxcb.so.1.1.0
+   obj:/usr/lib/libxcb.so.1.1.0
+   obj:/usr/lib/libxcb.so.1.1.0
+   fun:xcb_wait_for_reply
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/libGLX_mesa.so.0.0.0
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:calloc
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget4drawEPKNS_6VertexEmNS_13PrimitiveTypeERKNS_12RenderStatesE
+   fun:_ZNK2sf11VertexArray4drawERNS_12RenderTargetENS_12RenderStatesE
+   fun:_ZN2sf12RenderTarget4drawERKNS_8DrawableERKNS_12RenderStatesE
+   fun:sfRenderTexture_drawVertexArray
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:calloc
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   fun:_ZN2sf12RenderTarget4drawEPKNS_6VertexEmNS_13PrimitiveTypeERKNS_12RenderStatesE
+   fun:_ZNK2sf6Sprite4drawERNS_12RenderTargetENS_12RenderStatesE
+   fun:_ZN2sf12RenderTarget4drawERKNS_8DrawableERKNS_12RenderStatesE
+   fun:sfRenderWindow_drawSprite
+}
