@@ -1,10 +1,6 @@
 #ifndef RL_DISPLAY_H
 #define RL_DISPLAY_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <wchar.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -521,9 +517,5 @@ rltmap_mousy(rltmap *this, rldisp *d);
  */
 extern void
 rltmap_mouse(rltmap *this, rldisp *d, int *x, int *y);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* RL_DISPLAY_H */
