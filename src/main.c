@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "rldisp.h"
+#include "rl_display.h"
 
 int main(void)
 {
@@ -21,7 +21,7 @@ int main(void)
 
     srand((unsigned)time(NULL));
 
-    if (!(disp = rldisp_init(1280, 720, 800, 576, "window", false)))
+    if (!(disp = rldisp_init(1280, 720, 800, 576, "window", true)))
     {
         result = EXIT_FAILURE;
         goto cleanup;
@@ -51,8 +51,8 @@ int main(void)
         }
     }
 
-    rltmap_wstrd(tmap, wstr, fg, color, RL_TILE_CENTER, 0, 1);
     rltmap_wstrr(tmap, wstr, fg, color, RL_TILE_CENTER, 0, 0);
+    rltmap_wstrb(tmap, wstr, fg, color, RL_TILE_CENTER, 0, 1);
 
     while (rldisp_status(disp) && run)
     {
@@ -61,7 +61,7 @@ int main(void)
         if (rldisp_key(disp, RL_KEY_ESCAPE))
             run = false;
 
-        rltmap_mous(tmap, disp, &mousex, &mousey);
+        rltmap_mouse(tmap, disp, &mousex, &mousey);
 
         if (mousex >= 0 && mousex < 50 && mousey >= 0 && mousey < 36)
         {
@@ -69,15 +69,15 @@ int main(void)
             color.g = (uint8_t)(rand() % 255);
             color.b = (uint8_t)(rand() % 255);
 
-            rltile_fg(tile, color);
+            rltile_fghue(tile, color);
 
             color.r = (uint8_t)(rand() % 255);
             color.g = (uint8_t)(rand() % 255);
             color.b = (uint8_t)(rand() % 255);
 
-            rltile_bg(tile, color);
+            rltile_bghue(tile, color);
 
-            rltile_chr(tile, (wchar_t)(rand() % 128));
+            rltile_chr(tile, (wchar_t)(rand() % 65536));
 
             rltmap_tile(tmap, tile, mousex, mousey);
         }

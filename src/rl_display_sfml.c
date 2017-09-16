@@ -1,4 +1,4 @@
-#include "rldisp.h"
+#include "rl_display.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -87,7 +87,7 @@ static int
 rltmap_indx(rltmap *this, int x, int y);
 
 static void
-rltmap_updt(rltmap *this, rltile *t, int x, int y);
+rltmap_updtile(rltmap *this, rltile *t, int x, int y);
 
 static void
 rltmap_updbg(rltmap *this, int i, rltile *t, int x, int y);
@@ -145,9 +145,17 @@ rldisp_updscl(rldisp *this)
 rldisp *
 rldisp_init(int ww, int wh, int fw, int fh, char *n, bool f)
 {
+    size_t mc;
     rldisp *this = NULL;
-    sfVideoMode m = {(unsigned)ww, (unsigned)wh, 32u};
     sfUint32 s = (f) ? sfFullscreen : sfClose | sfTitlebar;
+    sfVideoMode m = {(unsigned)ww, (unsigned)wh, 32u};
+
+    /* If both ww and wh are 0, then select the largest possible video
+       mode to use */
+    if (!ww && !wh)
+    {
+        m = sfVideoMode_getFullscreenModes(&mc)[0];
+    }
 
     /* TODO: Sanity check for size parameters? */
 
@@ -609,7 +617,7 @@ rltile_chr(rltile *this, wchar_t c)
 }
 
 void
-rltile_fg(rltile *this, rlhue h)
+rltile_fghue(rltile *this, rlhue h)
 {
     if (!this)
         return;
@@ -619,7 +627,7 @@ rltile_fg(rltile *this, rlhue h)
 }
 
 void
-rltile_bg(rltile *this, rlhue h)
+rltile_bghue(rltile *this, rlhue h)
 {
     if (!this)
         return;
@@ -683,7 +691,7 @@ rltmap_chkchr(rltmap *this, wchar_t c)
 }
 
 static void
-rltmap_updt(rltmap *this, rltile *t, int x, int y)
+rltmap_updtile(rltmap *this, rltile *t, int x, int y)
 {
     int i;
     sfIntRect rect;
@@ -893,7 +901,7 @@ rltmap_tile(rltmap *this, rltile *t, int x, int y)
     if (!this || !t)
         return;
 
-    rltmap_updt(this, t, x, y);
+    rltmap_updtile(this, t, x, y);
 }
 
 extern void
@@ -910,14 +918,14 @@ rltmap_wstrr(rltmap *this, wchar_t *s, rlhue fg, rlhue bg, rlttype t, int x,
         if (!(tile = rltile_init(s[i], fg, bg, t, 0.0f, 0.0f)))
             return;
 
-        rltmap_updt(this, tile, (x + i) % this->w, y + ((x + i) / this->w));
+        rltmap_updtile(this, tile, (x + i) % this->w, y + ((x + i) / this->w));
 
         rltile_free(tile);
     }
 }
 
 extern void
-rltmap_wstrd(rltmap *this, wchar_t *s, rlhue fg, rlhue bg, rlttype t, int x,
+rltmap_wstrb(rltmap *this, wchar_t *s, rlhue fg, rlhue bg, rlttype t, int x,
     int y)
 {
     rltile *tile = NULL;
@@ -930,7 +938,7 @@ rltmap_wstrd(rltmap *this, wchar_t *s, rlhue fg, rlhue bg, rlttype t, int x,
         if (!(tile = rltile_init(s[i], fg, bg, t, 0.0f, 0.0f)))
             return;
 
-        rltmap_updt(this, tile, x, y + i);
+        rltmap_updtile(this, tile, x, y + i);
 
         rltile_free(tile);
     }   
@@ -977,7 +985,7 @@ rltmap_mousy(rltmap *this, rldisp *d)
 }
 
 void
-rltmap_mous(rltmap *this, rldisp *d, int *x, int *y)
+rltmap_mouse(rltmap *this, rldisp *d, int *x, int *y)
 {
     if (!this || !d|| !d->win.hndl || !x || !y)
         return;

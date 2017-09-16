@@ -5,6 +5,8 @@ LIBS = -lm -ldl -isystem lib
 FLGS = -std=c99 -Wall -Wextra -Werror -Wconversion
 SFML = -lcsfml-system -lcsfml-window -lcsfml-graphics
 
+VGARGS = --leak-check=full --suppressions=etc/valgrind/display.supp
+
 BIN = bin/example
 SRC = $(wildcard src/*.c)
 
@@ -20,4 +22,4 @@ $(BIN): $(SRC)
 	$(COMP) $(FLGS) $^ -o $@ $(LIBS) $(SFML)
 
 check: $(BIN)
-	valgrind --leak-check=full $(BIN)
+	valgrind $(VGARGS) $(BIN)
