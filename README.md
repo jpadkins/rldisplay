@@ -6,13 +6,12 @@ interface is generic across backends.
 
 ## Installation
 
-For now, copy [src/rl_display.h](src/rl_display.h) and the implementation file
-of your choosing into your project. Currently only the CSFML implementation
-[src/rl_display_sfml.c](src/rl_display_sfml.c) is available, so you'll need to
-link to the CFML library. CSFML is available in the package managers for most
-\*nix, homebrew on macOS, or can be downloaded directly from the project's
-website prebuilt for Windows or the source code for \*BSD:
-[link.](https://www.sfml-dev.org/download/csfml/)
+For now, copy `src/rl_display.h` and the implementation file of your choosing
+into your project. Currently only the CSFML implementation `src/rl_display_sfml.c`
+is available, so you'll need to link to the CFML library. CSFML is available in
+the package managers for most \*nix, homebrew on macOS, or can be downloaded
+directly from the project's website prebuilt for Windows or the source code for
+\*BSD: [link.](https://www.sfml-dev.org/download/csfml/)
 
 Once stabilized, a header-only version of roguelike_display will be generated.
 
