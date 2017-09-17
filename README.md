@@ -67,9 +67,10 @@ rldisp_clrhue(disp, black);
 if (!(tmap = rltmap_init(font, 16, 65536, 50, 36, 16, 16)))
     goto cleanup;
 
-/* When you create a tile, you specify the type. Either RL_TILE_TEXT, RL_TILE_EXACT,
- * RL_TILE_FLOOR, RL_TILE_CENTER. If the type is RL_TILE_EXACT, then the last two
- * parameters specify the right and down offset of the glyph from the top-left.
+/* When you create a tile, you specify the type. Either RL_TILE_TEXT,
+ * RL_TILE_EXACT, RL_TILE_FLOOR, RL_TILE_CENTER. If the type is RL_TILE_EXACT,
+ * then the last two parameters specify the right and down offset of the glyph
+ * from the top-left.
  */
 if (!(tile = rltile_init(L'╬', fg_color, bg_color, RLTILE_CENTER, 0.0f, 0.0f)))
     goto cleanup;
