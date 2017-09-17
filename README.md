@@ -67,10 +67,22 @@ rldisp_clrhue(disp, black);
 if (!(tmap = rltmap_init(font, 16, 65536, 50, 36, 16, 16)))
     goto cleanup;
 
-/* When you create a tile, you specify the type. Either RL_TILE_TEXT,
- * RL_TILE_EXACT, RL_TILE_FLOOR or RL_TILE_CENTER. If the type is
- * RL_TILE_EXACT, then the last two parameters specify the right and down
- * offset of the glyph from the top-left.
+/* When you create a tile, you specify the type. This determines how the tile's
+ * glyph is placed within the space allocated for the tile in the rltmap.
+ *
+ * RL_TILE_TEXT   (by font kerning, e.g. 'y' would intrude on the tile below)
+ * RL_TILE_EXACT  (by the right and bottom values as offsets from the center)
+ * RL_TILE_FLOOR  (centered horizontally and floored verticially)
+ * RL_TILE_CENTER (centered horizontally and vertically)
+ * 
+ * If the type is RL_TILE_EXACT, then the last two parameters specify the right
+ * and down offset of the glyph from the top-left. Since this tile's type is
+ * RL_TILE_CENTER, the arguments we pass do not matter (unless we change the
+ * tile's type in the future, which is possible with rltile_type(2)).
+ *
+ * All of an rltile's values can be changed after creation with the setter
+ * functions rltile_wchar(2), rltile_fghue(2), rltile_bghue(2), rltile_type(2),
+ * rltile_right(2), rltile_bottm(2).
  */
 if (!(tile = rltile_init(L'╬', fg_color, bg_color, RLTILE_CENTER, 0.0f, 0.0f)))
     goto cleanup;
@@ -95,6 +107,11 @@ while (rldisp_status(disp) && run)
     rldisp_prsnt(disp);
 }
 
+cleanup:
+
+rltile_cleanup(tile);
+rltmap_cleanup(tmap);
+rldisp_cleanup(disp);
 ...
 ```
 
