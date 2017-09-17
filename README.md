@@ -44,6 +44,7 @@ rltile *tile = NULL;
 rlhue black = {0, 0, 0, 255};
 rlhue red = {255, 0, 0, 255};
 rlhue blue = {0, 0, 255, 255};
+char *font = "res/fonts/unifont.ttf";
 
 /* 1280x720 is the window size and 800x576 is the frame size which is stretched
  * to the window. The third parameter specifies the window title and the fourth
@@ -60,9 +61,10 @@ rldisp_clrhue(disp, black);
 
 /* rltmaps are grids of characters with the same character size and spacing.
  * For this rltmap, the character size is 16, as well as the x and y spacing.
- * 50x36 are the dimensions of the map.
+ * 50x36 are the dimensions of the map. 65536 is the maximum unicode character
+ * value that should be supported.
  */
-if (!(tmap = rltmap_init("res/fonts/unifont.ttf", 16, 50, 36, 16, 16)))
+if (!(tmap = rltmap_init(font, 16, 65536, 50, 36, 16, 16)))
     goto cleanup;
 
 /* When you create a tile, you specify the type. Either RL_TILE_TEXT, RL_TILE_EXACT,

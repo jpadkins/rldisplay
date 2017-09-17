@@ -401,6 +401,7 @@ rltmap function declarations
  *                  supported types are TrueType, Type 1, CFF, OpenType, SFNT,
  *                  X11 PCF, Windows FNT, BDF, PFR and Type 42A
  * @param   csz     pt size for the characters in the map
+ * @param   num     highest unicode value to support
  * @param   w       width of the map (in # of characters)
  * @param   h       height of the map (in # of characters)
  * @param   offx    horizontal offset of each character in the map
@@ -409,7 +410,7 @@ rltmap function declarations
  * @return  pointer to the new rltmap
  */
 extern rltmap *
-rltmap_init(const char *f, int csz, int w, int h, int offx, int offy);
+rltmap_init(const char *f, int csz, int num, int w, int h, int offx, int offy);
 
 /* @brief   Sets the position of the rltmap relative to the rldisp frame buffer
  *
@@ -521,6 +522,21 @@ rltmap_mousy(rltmap *this, rldisp *d);
  */
 extern void
 rltmap_mouse(rltmap *this, rldisp *d, int *x, int *y);
+
+/******************************************************************************
+rlhue function declarations
+******************************************************************************/
+
+/* @brief   Sets the values of an rlhue
+ *
+ * @param   this    pointer to the rlhue
+ * @param   r       new red value
+ * @param   g       new green value
+ * @param   b       new blue value
+ * @param   a       new alpha value
+ */
+extern void
+rlhue_set(rlhue *this, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
 #ifdef __cplusplus
 }

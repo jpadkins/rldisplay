@@ -17,9 +17,9 @@ struct rltile {
     float r;
     float b;
     wchar_t chr;
+    rlttype type;
     sfColor fg[4];
     sfColor bg[4];
-    rlttype type;
 };
 
 struct rltmap
@@ -28,13 +28,14 @@ struct rltmap
     int h;
     float x;
     float y;
+    int num;
     int offx;
     int offy;
     int chrsz;
     sfFont *font;
+    sfGlyph **chrs;
     sfVertexArray *fg;
     sfVertexArray *bg;
-    sfGlyph *chrs[65536];
 };
 
 struct rldisp
@@ -84,7 +85,7 @@ static void
 rltmap_chkchr(rltmap *this, wchar_t c);
 
 static int
-rltmap_indx(rltmap *this, int x, int y);
+rltmap_index(rltmap *this, int x, int y);
 
 static void
 rltmap_updtile(rltmap *this, rltile *t, int x, int y);
@@ -708,7 +709,6 @@ rltmap_updtile(rltmap *this, rltile *t, int x, int y)
     {
     case RL_TILE_TEXT:
         bnds = this->chrs[(size_t)(t->chr)]->bounds;
-
         r = bnds.left;
         b = (float)(this->offy) + bnds.top;
         break;
@@ -730,7 +730,7 @@ rltmap_updtile(rltmap *this, rltile *t, int x, int y)
         break;
     }
 
-    i = rltmap_indx(this, x, y);
+    i = rltmap_index(this, x, y);
 
     rltmap_updfg(this, i, t, x, y, r, b, &rect);
     rltmap_updbg(this, i, t, x, y);
@@ -826,7 +826,7 @@ rltmap_updbg(rltmap *this, int i, rltile *t, int x, int y)
 }
 
 static int
-rltmap_indx(rltmap *this, int x, int y)
+rltmap_index(rltmap *this, int x, int y)
 {
     if (!this)
         return 0;
@@ -835,7 +835,7 @@ rltmap_indx(rltmap *this, int x, int y)
 }
 
 rltmap *
-rltmap_init(const char *f, int csz, int w, int h, int offx, int offy)
+rltmap_init(const char *f, int csz, int num, int w, int h, int offx, int offy)
 {
     rltmap *this = NULL;
 
@@ -843,46 +843,38 @@ rltmap_init(const char *f, int csz, int w, int h, int offx, int offy)
         return NULL;
 
     if (!(this->font = sfFont_createFromFile(f)))
-    {
-        free(this);
-        return NULL;
-    }
+        goto error;
 
     if (!(this->fg = sfVertexArray_create()))
-    {
-        sfFont_destroy(this->font);
-        free(this);
-
-        return NULL;
-    }
+        goto error;
 
     sfVertexArray_resize(this->fg, (unsigned)(w * h * 4));
     sfVertexArray_setPrimitiveType(this->fg, sfQuads);
 
     if (!(this->bg = sfVertexArray_create()))
-    {
-        sfVertexArray_destroy(this->fg);
-        sfFont_destroy(this->font);
-        free(this);
-
-        return NULL;
-    }
+        goto error;
 
     sfVertexArray_resize(this->bg, (unsigned)(w * h * 4));
     sfVertexArray_setPrimitiveType(this->bg, sfQuads);
+
+    if (!(this->chrs = malloc(sizeof(sfGlyph *) * (long unsigned)num)))
+        goto error;
 
     this->w = w;
     this->h = h;
     this->x = 0.0f;
     this->y = 0.0f;
+    this->num = num;
     this->chrsz = csz;
     this->offx = offx;
     this->offy = offy;
 
-    for (size_t i = 0; i < 65536; ++i)
-        this->chrs[i] = NULL;
-
     return this;
+
+error:
+
+    rltmap_free(this);
+    return NULL;
 }
 
 void
@@ -898,7 +890,7 @@ rltmap_pos(rltmap *this, float x, float y)
 void
 rltmap_tile(rltmap *this, rltile *t, int x, int y)
 {
-    if (!this || !t)
+    if (!this || !t || t->chr > this->num)
         return;
 
     rltmap_updtile(this, t, x, y);
@@ -959,8 +951,13 @@ rltmap_free(rltmap *this)
     if (this->bg)
         sfVertexArray_destroy(this->bg);
 
-    for (size_t i = 0; i < 65536; ++i)
-        if (this->chrs[i]) free(this->chrs[i]);
+    if (this->chrs)
+    {
+        for (int i = 0; i < this->num; ++i)
+            free(this->chrs[i]);
+
+        free(this->chrs);
+    }
 
     if (this)
         free(this);
@@ -994,5 +991,21 @@ rltmap_mouse(rltmap *this, rldisp *d, int *x, int *y)
     
     *x /= this->offx;
     *y /= this->offy;
+}
+
+/******************************************************************************
+rlhue function implementations
+******************************************************************************/
+
+extern void
+rlhue_set(rlhue *this, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+{
+    if (!this)
+        return;
+
+    this->r = r;
+    this->g = g;
+    this->b = b;
+    this->a = a;
 }
 
