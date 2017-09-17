@@ -900,6 +900,7 @@ extern void
 rltmap_wstrr(rltmap *this, wchar_t *s, rlhue fg, rlhue bg, rlttype t, int x,
     int y)
 {
+    int xi, yi;
     rltile *tile = NULL;
 
     if (!this || !s)
@@ -907,12 +908,16 @@ rltmap_wstrr(rltmap *this, wchar_t *s, rlhue fg, rlhue bg, rlttype t, int x,
 
     for (int i = 0; i < (int)wcslen(s); ++i)
     {
-        if (!(tile = rltile_init(s[i], fg, bg, t, 0.0f, 0.0f)))
-            return;
+        xi = (x + i) % this->w;
+        yi = y + ((x + i) / this->w);
 
-        rltmap_updtile(this, tile, (x + i) % this->w, y + ((x + i) / this->w));
-
-        rltile_free(tile);
+        if (xi >= 0 && xi < this->w && yi >= 0 && yi < this->h)
+        {
+            if (!(tile = rltile_init(s[i], fg, bg, t, 0.0f, 0.0f)))
+                return;
+            rltmap_updtile(this, tile, xi, yi);
+            rltile_free(tile);
+        }
     }
 }
 
@@ -920,6 +925,7 @@ extern void
 rltmap_wstrb(rltmap *this, wchar_t *s, rlhue fg, rlhue bg, rlttype t, int x,
     int y)
 {
+    int xi, yi;
     rltile *tile = NULL;
 
     if (!this || !s)
@@ -927,12 +933,16 @@ rltmap_wstrb(rltmap *this, wchar_t *s, rlhue fg, rlhue bg, rlttype t, int x,
 
     for (int i = 0; i < (int)wcslen(s); ++i)
     {
-        if (!(tile = rltile_init(s[i], fg, bg, t, 0.0f, 0.0f)))
-            return;
+        xi = x + ((y + i) / this->h);
+        yi = (y + i) % this->h;
 
-        rltmap_updtile(this, tile, x, y + i);
-
-        rltile_free(tile);
+        if (xi >= 0 && xi < this->w && yi >= 0 && yi < this->h)
+        {
+            if (!(tile = rltile_init(s[i], fg, bg, t, 0.0f, 0.0f)))
+                return;
+            rltmap_updtile(this, tile, xi, yi);
+            rltile_free(tile);
+        }
     }   
 }
 
