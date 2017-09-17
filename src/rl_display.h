@@ -342,7 +342,7 @@ rltile_null(void);
  * @param   c       the new character
  */
 extern void
-rltile_chr(rltile *this, wchar_t c);
+rltile_wchr(rltile *this, wchar_t c);
 
 /* @brief   Sets the rltile's foreground color
  *

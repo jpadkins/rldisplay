@@ -16,7 +16,7 @@ Struct definitions
 struct rltile {
     float r;
     float b;
-    wchar_t chr;
+    wchar_t wchr;
     rlttype type;
     sfColor fg[4];
     sfColor bg[4];
@@ -584,7 +584,7 @@ rltile_init(wchar_t c, rlhue fg, rlhue bg, rlttype t, float r, float b)
     if (!(this = malloc(sizeof(rltile))))
         return NULL;
 
-    this->chr = c;
+    this->wchr = c;
     
     for (int i = 0; i < 4; ++i)
     {
@@ -609,12 +609,12 @@ rltile_null(void)
 }
 
 void
-rltile_chr(rltile *this, wchar_t c)
+rltile_wchr(rltile *this, wchar_t c)
 {
     if (!this)
         return;
 
-    this->chr = c;
+    this->wchr = c;
 }
 
 void
@@ -702,13 +702,13 @@ rltmap_updtile(rltmap *this, rltile *t, int x, int y)
     if (!this || !t)
         return;
 
-    rltmap_chkchr(this, t->chr);
-    rect = this->chrs[(size_t)(t->chr)]->textureRect;
+    rltmap_chkchr(this, t->wchr);
+    rect = this->chrs[(size_t)(t->wchr)]->textureRect;
 
     switch (t->type)
     {
     case RL_TILE_TEXT:
-        bnds = this->chrs[(size_t)(t->chr)]->bounds;
+        bnds = this->chrs[(size_t)(t->wchr)]->bounds;
         r = bnds.left;
         b = (float)(this->offy) + bnds.top;
         break;
@@ -890,7 +890,7 @@ rltmap_pos(rltmap *this, float x, float y)
 void
 rltmap_tile(rltmap *this, rltile *t, int x, int y)
 {
-    if (!this || !t || t->chr > this->num)
+    if (!this || !t || t->wchr > this->num)
         return;
 
     rltmap_updtile(this, t, x, y);
