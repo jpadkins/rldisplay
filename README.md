@@ -81,7 +81,7 @@ if (!(tmap = rltmap_init(font, 16, 65536, 50, 36, 16, 16)))
  * tile's type in the future, which is possible with rltile_type(2)).
  *
  * All of an rltile's values can be changed after creation with the setter
- * functions rltile_wchar(2), rltile_fghue(2), rltile_bghue(2), rltile_type(2),
+ * functions rltile_glyph(2), rltile_fghue(2), rltile_bghue(2), rltile_type(2),
  * rltile_right(2), rltile_bottm(2).
  */
 if (!(tile = rltile_init(L'╬', fg_color, bg_color, RLTILE_CENTER, 0.0f, 0.0f)))

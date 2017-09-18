@@ -109,146 +109,149 @@ rldisp function declarations
  * largest possible mode for the monitor, you can pass 0 as the first two
  * arguments and true as the last.
  *
- * @param   ww  width of the window
- * @param   wh  height of the window
- * @param   fw  width of the frame buffer
- * @param   fh  height of the frame buffer
- * @param   n   name of the window
- * @param   f   whether the window is fullscreen
+ * @param   wwidth  width of the window
+ * @param   wheight height of the window
+ * @param   fwidth  width of the frame buffer
+ * @param   fheight height of the frame buffer
+ * @param   name    name of the window
+ * @param   fscrn   whether the window is fullscreen
  *
  * @return  a pointer to the new rldisp
  */
 extern rldisp *
-rldisp_init(int ww, int wh, int fw, int fh, char *n, bool f);
+rldisp_init(int wwidth, int wheight, int fwidth, int fheight, char *name,
+    bool fscrn);
 
-/* @brief   Sets the rldisp to be either fullscreen or windowed.
+/* @brief   Sets an rldisp to be either fullscreen or windowed.
  *
  * Calling this function will cause the window to be recreated.
  *
- * @param   this    pointer to the rldisp
- * @param   f       whether the window should be set to fullscreen or windowed
+ * @param   this    pointer to an rldisp
+ * @param   fscrn   whether the window should be set to fullscreen or windowed
  */
 extern void
-rldisp_fscrn(rldisp *this, bool f);
+rldisp_fscrn(rldisp *this, bool fscrn);
 
-/* @brief   Sets the rldisp window size
+/* @brief   Sets an rldisp window size
  *
  * Calling this function will cause the window to be recreated. If the window
  * is fullscreen and the dimensions passed are not a valid fullscreen mode,
  * the largest valid mode will be selected.
  *
- * @param   this    pointer to the rldisp
- * @param   w       new width of the window
- * @param   h       new height of the window
+ * @param   this    pointer to an rldisp
+ * @param   width   new width of the window
+ * @param   height  new height of the window
  */
 extern void
-rldisp_rsize(rldisp *this, int w, int h);
+rldisp_rsize(rldisp *this, int width, int height);
 
-/* @brief   Sets the rldisp window name
+/* @brief   Sets an rldisp window name
  *
- * @param   this    pointer to the rldisp
- * @param   n       new window name
+ * @param   this    pointer to an rldisp
+ * @param   name    new window name
  */
 extern void
-rldisp_rname(rldisp *this, const char *n);
+rldisp_rname(rldisp *this, const char *name);
 
-/* @brief   Sets whether or not the rldisp window should enable vertical sync
+/* @brief   Sets whether or not an rldisp window should enable vertical sync
  *
- * @param   this    pointer to the rldisp
- * @param   e       whether vertical sync is enabled
+ * @param   this    pointer to an rldisp
+ * @param   enabled whether vertical sync is enabled
  */
 extern void
-rldisp_vsync(rldisp *this, bool e);
+rldisp_vsync(rldisp *this, bool enabled);
 
-/* @brief   Sets whther or not the rldisp window should hide the mouse cursor
+/* @brief   Sets whther or not an rldisp window should hide the mouse cursor
  *
- * @param   this    pointer to the rldisp
- * @param   v       whether the mouse cursor is visible
+ * @param   this    pointer to an rldisp
+ * @param   visible whether the mouse cursor is visible
  */
 extern void
-rldisp_shwcur(rldisp *this, bool v);
+rldisp_shwcur(rldisp *this, bool visible);
 
-/* @brief   Sets the fps limit of the rldisp window (or 0 to disable)
+/* @brief   Sets the fps limit of an rldisp window (or 0 to disable)
  *
  * The default value for an rldisp is 0 (disabled).
  *
- * @param   this    pointer to the rldisp
- * @param   l       new fps limit
+ * @param   this    pointer to an rldisp
+ * @param   limit   new fps limit
  */
 extern void
-rldisp_fpslim(rldisp *this, int l);
+rldisp_fpslim(rldisp *this, int limit);
 
 /* @brief   Frees the memory allocated for an rldisp
  *
- * @param   this    pointer to the rldisp
+ * @param   this    pointer to an rldisp
  */
 extern void
 rldisp_free(rldisp *this);
 
-/* @brief   Returns the status of the rldisp window
+/* @brief   Returns the status of an rldisp window
  *
- * @param   this    pointer to the rldisp
+ * @param   this    pointer to an rldisp
  *
  * @return  true if the window is open, false otherwise
  */
 extern bool
 rldisp_status(rldisp *this);
 
-/* @brief   Flushes the input event queue for the rldisp window
+/* @brief   Flushes the input event queue for an rldisp window
  *
- * This should be called between rldisp_clr(1) and rldisp_prsnt(1) every
- * frame, so that rldisp_key(2) returns the correct value.
+ * This should be called every frame, so that rldisp_key(2) returns the
+ * correct value.
  *
- * @param   this    pointer to the rldisp
+ * @param   this    pointer to an rldisp
  */
 extern void
 rldisp_evtflsh(rldisp *this);
 
-/* @brief   Clears the rldisp window
+/* @brief   Clears an rldisp window
  *
- * Clears the rldisp window to the color set by rldisp_clrhue(2). You should
- * begin every discrete frame by calling this function.
+ * Clears the rldisp window to the hue set by rldisp_clrhue(2). You should
+ * begin every discrete frame by calling this function. The default hue is
+ * black.
  *
- * @param   this    pointer to the rldisp
+ * @param   this    pointer to an rldisp
  */
 extern void
 rldisp_clr(rldisp *this);
 
-/* @brief   Sets the clear color for the rldisp window
+/* @brief   Sets the clear hue for an rldisp window
  *
- * @param   h   rlhue that the clear color is set to
+ * @param   this    pointer to the rldisp
+ * @param   hue     rlhue that the clear hue is set to
  */
 extern void
-rldisp_clrhue(rldisp *this, rlhue h);
+rldisp_clrhue(rldisp *this, rlhue hue);
 
 /* @brief   Draws a rltmap into the rldisp's frame buffer
  *
- * @param   this    pointer to the rldisp
- * @param   t       pointer to the rltmap
+ * @param   this    pointer to an rldisp
+ * @param   tmap    pointer to an rltmap
  */
 extern void
-rldisp_drtmap(rldisp *this, rltmap *t);
+rldisp_drtmap(rldisp *this, rltmap *tmap);
 
-/* @brief   Finalizes rendering the rldisp for a frame
+/* @brief   Finalizes rendering an rldisp for a frame
  *
  * You should end every discrete frame of rendering by calling this function.
  *
- * @param   this    pointer to the rldisp
+ * @param   this    pointer to an rldisp
  */
 extern void
 rldisp_prsnt(rldisp *this);
 
 /* @brief   Returns the pressed status of an input key for an rldisp
  *
- * @param   this    pointer to the rldisp
- * @param   k       rlkey to check the status of
+ * @param   this    pointer to an rldisp
+ * @param   key     rlkey to check the status of
  *
  * @return  true if the key is pressed, false otherwise
  */
 extern bool
-rldisp_key(rldisp *this, rlkey k);
+rldisp_key(rldisp *this, rlkey key);
 
-/* @brief   Returns the x position of the mouse adjusted to the frame buffer
+/* @brief   Returns the x position of the mouse adjusted to an rldisp's frame
  *
  * If the mouse is outside of the rldisp window, then the coordinate returned
  * is the absolute position on the monitor relative to the top left corner of
@@ -260,14 +263,14 @@ rldisp_key(rldisp *this, rlkey k);
  * dimensions are 640x480, and the mouse is exactly halfway across the window
  * horizontally, then the coordinate returned will be 320.
  *
- * @param   this    pointer to the rldisp
+ * @param   this    pointer to an rldisp
  * 
- * @return  x coordinate of the mouse adjusted to the frame buffer
+ * @return  x coordinate of the mouse adjusted to an rldisp's frame buffer
  */
 extern int
 rldisp_mousx(rldisp *this);
 
-/* @brief   Returns the y position of the mouse adjusted to the frame buffer
+/* @brief   Returns the y position of the mouse adjusted to an rldisp's frame
  *
  * If the mouse is outside of the rldisp window, then the coordinate returned
  * is the absolute position on the monitor relative to the top left corner of
@@ -279,14 +282,14 @@ rldisp_mousx(rldisp *this);
  * dimensions are 640x480, and the mouse is exactly halfway down the window
  * vertically, then the coordinate returned will be 240.
  *
- * @param   this    pointer to the rldisp
+ * @param   this    pointer to an rldisp
  * 
- * @return  y coordinate of the mouse adjusted to the frame buffer
+ * @return  y coordinate of the mouse adjusted to an rldisp's frame buffer
  */
 extern int
 rldisp_mousy(rldisp *this);
 
-/* @brief   Sets the args to the x and y pos of the mouse adjusted to the frame
+/* @brief   Sets args to x and y pos of the mouse adjusted to an rldisp's frame
  *
  * If the mouse is outside of the rldisp window, then the coords set will be
  * the absolute position on the monitor relative to the top left corner of the
@@ -298,12 +301,12 @@ rldisp_mousy(rldisp *this);
  * dimensions are 640x480, and the mouse is exactly in the center of the window
  * both horizontally and vertically, then the values set will be 320x240.
  *
- * @param   this    pointer to the rldisp
- * @param   x       int pointer to set to the x mouse coordinate
- * @param   y       int pointer to set to the y mouse coordinate
+ * @param   this    pointer to an rldisp
+ * @param   mousex  pointer to an int to set to the x mouse coordinate
+ * @param   mousey  pointer to an int to set to the y mouse coordinate
  */
 extern void
-rldisp_mouse(rldisp *this, int *x, int *y);
+rldisp_mouse(rldisp *this, int *mousex, int *mousey);
 
 /******************************************************************************
 rltile function declarations
@@ -311,19 +314,20 @@ rltile function declarations
 
 /* @brief   Returns a pointer to a new rltile
  *
- * @param   c   the character of the tile
- * @param   fg  rlhue for the foreground of the tile (the character itself)
- * @param   bg  rlhue for the background of the tile
- * @param   t   rltype of the tile
- * @param   r   amount the tile's character should be shifted towards the
- *              right (matters for RL_TILE_EXACT type tiles only)
- * @param   b   amount the tile's character should be shifted towards the
- *              bottom (matters for RL_TILE_EXACT type tiles only)
+ * @param   glyph   the glyph of the tile
+ * @param   fghue   rlhue for the foreground of the tile (the character itself)
+ * @param   bghue   rlhue for the background of the tile
+ * @param   type    rltype of the tile
+ * @param   right   amount the tile's character should be shifted towards the
+ *                  right (matters for RL_TILE_EXACT type tiles only)
+ * @param   bottom  amount the tile's character should be shifted towards the
+ *                  bottom (matters for RL_TILE_EXACT type tiles only)
  * 
  * @return  a pointer to the new rltile
  */
 extern rltile *
-rltile_init(wchar_t c, rlhue fg, rlhue bg, rlttype t, float r, float b);
+rltile_init(wchar_t glyph, rlhue fghue, rlhue bghue, rlttype type, float right,
+    float bottom);
 
 /* @brief   Returns a pointer to a new rltile with default arguments
  *
@@ -336,57 +340,57 @@ rltile_init(wchar_t c, rlhue fg, rlhue bg, rlttype t, float r, float b);
 extern rltile *
 rltile_null(void);
 
-/* @brief   Sets the rltile's character
+/* @brief   Sets an rltile's character
  *
- * @param   this    pointer to the rltile
- * @param   c       the new character
+ * @param   this    pointer to an rltile
+ * @param   glyph   the new glyph
  */
 extern void
-rltile_wchr(rltile *this, wchar_t c);
+rltile_glyph(rltile *this, wchar_t glyph);
 
-/* @brief   Sets the rltile's foreground color
+/* @brief   Sets an rltile's foreground color
  *
- * @param   this    pointer to the rltile
- * @param   h       the new foreground color
+ * @param   this    pointer to an rltile
+ * @param   hue     the new foreground hue
  */
 extern void
-rltile_fghue(rltile *this, rlhue h);
+rltile_fghue(rltile *this, rlhue hue);
 
-/* @brief   Sets the rltile's background color
+/* @brief   Sets an rltile's background color
  *
- * @param   this    pointer to the rltile
- * @param   h       the new background color
+ * @param   this    pointer to an rltile
+ * @param   hue     the new background hue
  */
 extern void
-rltile_bghue(rltile *this, rlhue h);
+rltile_bghue(rltile *this, rlhue hue);
 
-/* @brief   Sets the rltile's type
+/* @brief   Sets an rltile's type
  *
- * @param   this    pointer to the rltile
- * @param   t       the new rltiletype
+ * @param   this    pointer to an rltile
+ * @param   type    the new type
  */
 extern void
-rltile_type(rltile *this, rlttype t);
+rltile_type(rltile *this, rlttype type);
 
-/* @brief   Sets the rltile's right shift value
+/* @brief   Sets an rltile's right shift value
  *
- * @param   this    pointer to the rltile
- * @param   r       new right shift value
+ * @param   this    pointer to an rltile
+ * @param   right   new right shift value
  */
 extern void
-rltile_right(rltile *this, float r);
+rltile_right(rltile *this, float right);
 
-/* @brief   Sets the rltile's bottom shift value
+/* @brief   Sets an rltile's bottom shift value
  *
- * @param   this    pointer to the rltile
- * @param   r       new bottom shift value
+ * @param   this    pointer to an rltile
+ * @param   bottom  new bottom shift value
  */
 extern void
-rltile_bottm(rltile *this, float b);
+rltile_bottm(rltile *this, float bottom);
 
 /* @brief   Frees the memory allocated for an rltile
  *
- * @param   this    pointer to the rltile
+ * @param   this    pointer to an rltile
  */
 extern void
 rltile_free(rltile *this);
@@ -397,131 +401,132 @@ rltmap function declarations
 
 /* @brief   Returns a pointer to a new rltmap
  *
- * @param   f       relative path to the font file in the local filesystem,
+ * @param   font    relative path to the font file in the local filesystem,
  *                  supported types are TrueType, Type 1, CFF, OpenType, SFNT,
  *                  X11 PCF, Windows FNT, BDF, PFR and Type 42A
- * @param   csz     pt size for the characters in the map
- * @param   num     highest unicode value to support
- * @param   w       width of the map (in # of characters)
- * @param   h       height of the map (in # of characters)
+ * @param   csize   pt size for the characters in the map
+ * @param   cnum    highest unicode value to support
+ * @param   width   width of the map (in # of characters)
+ * @param   height  height of the map (in # of characters)
  * @param   offx    horizontal offset of each character in the map
  * @param   offy    vertical offset of each character in the mapA
  *
  * @return  pointer to the new rltmap
  */
 extern rltmap *
-rltmap_init(const char *f, int csz, int num, int w, int h, int offx, int offy);
+rltmap_init(const char *font, int csize, int cnum, int width, int height,
+    int offx, int offy);
 
-/* @brief   Sets the position of the rltmap relative to the rldisp frame buffer
+/* @brief   Sets the position of an rltmap relative to the rldisp frame buffer
  *
  * The default position for new rltmaps is 0.0x0.0
  *
- * @param   this    pointer to the rltmap
- * @param   x       x position (can be real)
- * @param   y       y position (can be real)
+ * @param   this    pointer to an rltmap
+ * @param   x       x position (can be a real number)
+ * @param   y       y position (can be a real number)
  */
 extern void
 rltmap_pos(rltmap *this, float x, float y);
 
-/* @brief   Updates the rltmap at coords with tile data
+/* @brief   Updates an rltmap at coords with tile data
  *
- * @param   this    pointer to the rltmap
- * @param   t       pointer to the rltile to update the rltmap with
+ * @param   this    pointer to an rltmap
+ * @param   t       pointer to an rltile to update the rltmap with
  * @param   x       x coordinate of the tile to update (within the rltmap)
  * @param   y       y coordiante of the tile to update (within the rltmap)
  */
 extern void
 rltmap_tile(rltmap *this, rltile *t, int x, int y);
 
-/* @brief   Updates the rltmap with a *wchar_t, moving towards the right
+/* @brief   Updates an rltmap with a *wchar_t, moving towards the right
  *
  * Places a wide string onto the rltmap, starting from the position specified
  * and moving to the right. The characters will wrap around to the next row
  * if the end of the current one is reached. The wchar_t array must be
  * terminated with an L'\0' or this function will segfault.
  *
- * @param   this    pointer to the rltmap
- * @param   s       pointer to an array of wchar_t which must end with L'\0'
- * @param   fg      foreground color to use for each of the rltiles
- * @param   bg      background color to use for each of the rltiles
- * @param   t       rltiletype to use for each of the tiles
+ * @param   this    pointer to an rltmap
+ * @param   wstr    pointer to an array of wchar_t which must end with L'\0'
+ * @param   fghue   foreground color to use for each of the rltiles
+ * @param   bghue   background color to use for each of the rltiles
+ * @param   type    rltiletype to use for each of the tiles
  * @param   x       starting x coordinate (within the rltmap)
  * @param   y       starting y coordinate (within the rltmap)
  */
 extern void
-rltmap_wstrr(rltmap *this, wchar_t *s, rlhue fg, rlhue bg, rlttype t, int x,
-    int y);
+rltmap_wstrr(rltmap *this, wchar_t *wstr, rlhue fghue, rlhue bghue,
+    rlttype type, int x, int y);
 
-/* @brief   Updates the rltmap with a *wchar_t, moving towards the bottom
+/* @brief   Updates an rltmap with a *wchar_t, moving towards the bottom
  *
  * Places a wide string onto the rltmap, starting from the position specified
  * and moving to the bottom. The characters will wrap around to the next col
  * if the end of the current one is reached. The wchar_t array must be
  * terminated with an L'\0' or this function will segfault.
  *
- * @param   this    pointer to the rltmap
- * @param   s       pointer to an array of wchar_t which must end with L'\0'
- * @param   fg      foreground color to use for each of the rltiles
- * @param   bg      background color to use for each of the rltiles
- * @param   t       rltiletype to use for each of the tiles
+ * @param   this    pointer to an rltmap
+ * @param   wstr    pointer to an array of wchar_t which must end with L'\0'
+ * @param   fghue   foreground color to use for each of the rltiles
+ * @param   bghue   background color to use for each of the rltiles
+ * @param   type    rltiletype to use for each of the tiles
  * @param   x       starting x coordinate (within the rltmap)
  * @param   y       starting y coordinate (within the rltmap)
  */
 extern void
-rltmap_wstrb(rltmap *this, wchar_t *s, rlhue fg, rlhue bg, rlttype t, int x,
-    int y);
+rltmap_wstrb(rltmap *this, wchar_t *wstr, rlhue fghue, rlhue bghue,
+        rlttype type, int x, int y);
 
 /* @brief   Frees the memory allocated for an rltmap
  *
- * @param   this    pointer to the rltmap
+ * @param   this    pointer to an rltmap
  */
 extern void
 rltmap_free(rltmap *this);
 
-/* @brief   Returns the x pos of the mouse as a tile coord within the tmap
+/* @brief   Returns the x pos of the mouse as a tile coord within an tmap
  *
  * Given a rltmap and the rldisp that it would be drawn to, this function
  * returns the x coordinate of the tile on the rltmap that the mouse is over,
  * or -1 if the mouse is not over where the rltmap would be drawn to.
  *
- * @param   this    pointer to the rltmap
- * @param   d       pointer to the rldisp that the rltmap will be drawn to
+ * @param   this    pointer to an rltmap
+ * @param   disp    pointer to an rldisp that the rltmap will be drawn to
  *
  * @return  The x coordinate of the tile the mouse is over, or -1 if the mouse
  *          is not within the rltmap
  */
 extern int
-rltmap_mousx(rltmap *this, rldisp *d);
+rltmap_mousx(rltmap *this, rldisp *disp);
 
-/* @brief   Returns the y pos of the mouse as a tile coord within the tmap
+/* @brief   Returns the y pos of the mouse as a tile coord within an tmap
  *
  * Given a rltmap and the rldisp that it would be drawn to, this function
  * returns the y coordinate of the tile on the rltmap that the mouse is over,
  * or -1 if the mouse is not over where the rltmap would be drawn to.
  *
- * @param   this    pointer to the rltmap
- * @param   d       pointer to the rldisp that the rltmap will be drawn to
+ * @param   this    pointer to an rltmap
+ * @param   disp    pointer to an rldisp that the rltmap will be drawn to
  *
  * @return  The y coordinate of the tile the mouse is over, or -1 if the mouse
  *          is not within the rltmap
  */
 extern int
-rltmap_mousy(rltmap *this, rldisp *d);
+rltmap_mousy(rltmap *this, rldisp *disp);
 
-/* @brief   Sets the args to the coordinates of the mouse within the rltmap
+/* @brief   Sets the args to the coordinates of the mouse within an rltmap
  *
  * Given a rltmap and the rldisp that it would be drawn to, this function
  * sets the int * arguments to the x and y coordinates of the tile that the
  * mouse is currently over, or it sets them both to -1 if the mouse is not
  * over where the rltmap would be drawn to.
  *
- * @param   this    pointer to the rltmap
- * @param   d       pointer to the rldisp that the rltmap will be drawn to
- * @param   x       int pointer to set to the x rltmap tile coordinates to
- * @param   y       int pointer to set to the y rltmap tile coordinates to
+ * @param   this    pointer to an rltmap
+ * @param   disp    pointer to an rldisp that the rltmap will be drawn to
+ * @param   x       pointer to an int to set to the x tile coordinates to
+ * @param   y       pointer to an int to set to the y tile coordinates to
  */
 extern void
-rltmap_mouse(rltmap *this, rldisp *d, int *x, int *y);
+rltmap_mouse(rltmap *this, rldisp *disp, int *x, int *y);
 
 /******************************************************************************
 rlhue function declarations
@@ -529,7 +534,7 @@ rlhue function declarations
 
 /* @brief   Sets the values of an rlhue
  *
- * @param   this    pointer to the rlhue
+ * @param   this    pointer to an rlhue
  * @param   r       new red value
  * @param   g       new green value
  * @param   b       new blue value

@@ -91,7 +91,7 @@ int main(void)
 
                 rltile_bghue(tile, color);
 
-                rltile_wchr(tile, rnducode());
+                rltile_glyph(tile, rnducode());
 
                 rltmap_tile(tmap, tile, i, j);
             }
