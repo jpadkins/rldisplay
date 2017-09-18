@@ -77,7 +77,7 @@ if (!(tmap = rltmap_init(font, 16, 65536, 50, 36, 16, 16)))
  * 
  * If the type is RL_TILE_EXACT, then the last two parameters specify the right
  * and down offset of the glyph from the top-left. Since this tile's type is
- * RL_TILE_CENTER, the arguments we pass do not matter (unless we change the
+ * RL\_TILE_CENTER, the arguments we pass do not matter (unless we change the
  * tile's type in the future, which is possible with rltile_type(2)).
  *
  * All of an rltile's values can be changed after creation with the setter
@@ -92,7 +92,7 @@ rltmap_tile(tmap, tile, 0, 0);
 
 while (rldisp_status(disp) && run)
 {
-    /* Handle all window events */
+    /* Handle all window events and update keyboard state */
     rldisp_evtflsh(disp);
 
     /* Quit if escape is pressed */
@@ -102,7 +102,7 @@ while (rldisp_status(disp) && run)
     /* Clear the rldisp */
     rldisp_clr(disp);
     /* Draw the rltmap onto the rldisp's frame buffer */
-    rldisp_drtmap(disp, tmap, 0.0f, 0.0f);
+    rldisp_drtmap(disp, tmap);
     /* Stretch the frame buffer to the window and finish rendering */
     rldisp_prsnt(disp);
 }
