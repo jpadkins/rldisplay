@@ -24,8 +24,8 @@ struct rltile {
 
 struct rltmap
 {
-    float x;
-    float y;
+    int x;
+    int y;
     int offx;
     int offy;
     int cnum;
@@ -353,8 +353,8 @@ rldisp_drtmap(rldisp *this, rltmap *tmap)
     states.shader = NULL;
     states.blendMode = sfBlendAlpha;
     states.transform = sfTransform_Identity;
-    sfTransform_translate(&states.transform, tmap->x, tmap->y);
     states.texture = sfFont_getTexture(tmap->font, (unsigned)tmap->csize);
+    sfTransform_translate(&states.transform, (float)tmap->x, (float)tmap->y);
 
     sfRenderTexture_drawVertexArray(this->frame.handle, tmap->bg, &states);
     sfRenderTexture_drawVertexArray(this->frame.handle, tmap->fg, &states);
@@ -722,8 +722,12 @@ rltmap_updtile(rltmap *this, rltile *t, int x, int y)
         b = (float)(this->offy) + bnds.top;
         break;
     case RL_TILE_EXACT:
-        r = t->right;
-        b = t->bottom;
+        r = (float)((int)(((float)(this->offx) -
+            (float)(rect.width)) / 2.0f));
+        b = (float)((int)(((float)(this->offy) -
+            (float)(rect.height)) / 2.0f));
+        r += t->right;
+        b += t->bottom;
         break;
     case RL_TILE_FLOOR:
         r = (float)((int)(((float)(this->offx) -
@@ -870,8 +874,8 @@ rltmap_init(const char *font, int csize, int cnum, int width, int height,
     if (!(this->glyphs = malloc(sizeof(sfGlyph *) * (long unsigned)cnum)))
         goto error;
 
-    this->x = 0.0f;
-    this->y = 0.0f;
+    this->x = 0;
+    this->y = 0;
     this->offx = offx;
     this->offy = offy;
     this->cnum = cnum;
@@ -888,7 +892,7 @@ error:
 }
 
 void
-rltmap_pos(rltmap *this, float x, float y)
+rltmap_dpos(rltmap *this, int x, int y)
 {
     if (!this)
         return;

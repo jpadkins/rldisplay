@@ -419,14 +419,14 @@ rltmap_init(const char *font, int csize, int cnum, int width, int height,
 
 /* @brief   Sets the position of an rltmap relative to the rldisp frame buffer
  *
- * The default position for new rltmaps is 0.0x0.0
+ * The default position for new rltmaps is 0x0
  *
  * @param   this    pointer to an rltmap
- * @param   x       x position (can be a real number)
- * @param   y       y position (can be a real number)
+ * @param   x       new x position
+ * @param   y       new y position
  */
 extern void
-rltmap_pos(rltmap *this, float x, float y);
+rltmap_dpos(rltmap *this, int x, int y);
 
 /* @brief   Updates an rltmap at coords with tile data
  *

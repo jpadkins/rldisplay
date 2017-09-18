@@ -24,16 +24,16 @@ wchar_t rnducode(void)
 int main(void)
 {
     bool run = true;
+    int mousex, mousey;
     int result = EXIT_SUCCESS;
-//  int mousex = -1, mousey = -1;
     wchar_t *wstr = L"Hello World!\0";
     char *font = "res/fonts/unifont.ttf";
 
     rltile *tile = NULL;
     rldisp *disp = NULL;
-    rltmap *tmap = NULL;
     rlhue color = { 0, 0, 0, 255 };
     rlhue fg = { 255, 255, 255, 255};
+    rltmap *tmap = NULL, *cursor = NULL;
 
     srand((unsigned)time(NULL));
 
@@ -70,6 +70,24 @@ int main(void)
     rltmap_wstrr(tmap, wstr, fg, color, RL_TILE_CENTER, 0, 0);
     rltmap_wstrb(tmap, wstr, fg, color, RL_TILE_CENTER, 0, 1);
 
+    rltile_glyph(tile, L'↖');
+    rltile_type(tile, RL_TILE_EXACT);
+    rlhue_set(&color, 0, 0, 0, 0);
+    rltile_bghue(tile, color);
+    rlhue_set(&color, 255, 255, 255, 255);
+    rltile_fghue(tile, color);
+    rltile_right(tile, -9.0f);
+    rltile_bottm(tile, -9.0f);
+
+    if (!(cursor = rltmap_init(font, 32, 65536, 1, 1, 32, 32)))
+    {
+        result = EXIT_FAILURE;
+        goto cleanup;
+    }
+
+    rltmap_tile(cursor, tile, 0, 0);
+    rltile_type(tile, RL_TILE_CENTER);
+
     while (rldisp_status(disp) && run)
     {
         rldisp_evtflsh(disp);
@@ -97,31 +115,19 @@ int main(void)
             }
             }
         }
-/*
-        rltmap_mouse(tmap, disp, &mousex, &mousey);
 
-        if (mousex >= 0 && mousex < 50 && mousey >= 0 && mousey < 36)
-        {
-            rlhue_set(&color, rndcolor(), rndcolor(), rndcolor(), 255);
+        rldisp_mouse(disp, &mousex, &mousey);
+        rltmap_dpos(cursor, mousex, mousey);
 
-            rltile_fghue(tile, color);
-
-            rlhue_set(&color, rndcolor(), rndcolor(), rndcolor(), 255);
-
-            rltile_bghue(tile, color);
-
-            rltile_chr(tile, (wchar_t)(rand() % 65536));
-
-            rltmap_tile(tmap, tile, mousex, mousey);
-        }
-*/
         rldisp_clr(disp);
         rldisp_drtmap(disp, tmap);
+        rldisp_drtmap(disp, cursor);
         rldisp_prsnt(disp);
     }
 
 cleanup:
     if (tile) rltile_free(tile);
+    if (cursor) rltmap_free(cursor);
     if (tmap) rltmap_free(tmap);
     if (disp) rldisp_free(disp);
 
