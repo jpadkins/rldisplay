@@ -232,6 +232,72 @@ rldisp_clrhue(rldisp *this, rlhue hue);
 extern void
 rldisp_drtmap(rldisp *this, rltmap *tmap);
 
+/* @brief   Draws a line directly to an rldisp's frame buffer
+ *
+ * The coordinates should be based on the rldisp's frame buffer, not its window
+ * size.
+ *
+ * @param   this    pointer to the rldisp
+ * @param   x0      x coordinate of the start of the line
+ * @param   y0      y coordinate of the start of the line
+ * @param   x1      x coordinate of the end of the line
+ * @param   y1      y coordinate of the end of the line
+ * @param   thick   thickness of the line
+ * @param   hue     hue of the line
+ */
+extern void
+rldisp_drline(rldisp *this, int x0, int y0, int x1, int y1, int thick,
+    rlhue hue);
+
+/* @brief   Draws an outward empty box directly to an rldisp's frame buffer
+ * 
+ * The coordinates should be based on the rldisp's frame buffer, not its window
+ * size. The thickness of the box moves outward from the bounds specified.
+ *
+ * @param   this    pointer to an rldisp
+ * @param   x       x coordinate of the box
+ * @param   y       y coordinate of the box
+ * @param   width   width of the box
+ * @param   height  height of the box
+ * @param   thick   thickness of the box
+ * @param   hue     hue of the box
+ */
+extern void
+rldisp_drboxo(rldisp *this, int x, int y, int width, int height, int thick,
+    rlhue hue);
+
+/* @brief   Draws an inward empty box directly to an rldisp's frame buffer
+ * 
+ * The coordinates should be based on the rldisp's frame buffer, not its window
+ * size. The thickness of the box moves inward from the bounds specified.
+ *
+ * @param   this    pointer to an rldisp
+ * @param   x       x coordinate of the box
+ * @param   y       y coordinate of the box
+ * @param   width   width of the box
+ * @param   height  height of the box
+ * @param   thick   thickness of the box
+ * @param   hue     hue of the box
+ */
+extern void
+rldisp_drboxi(rldisp *this, int x, int y, int width, int height, int thick,
+    rlhue hue);
+
+/* @brief   Draws a filled-in box directly to an rldisp's frame buffer
+ * 
+ * The coordinates should be based on the rldisp's frame buffer, not its window
+ * size.
+ *
+ * @param   this    pointer to an rldisp
+ * @param   x       x coordinate of the box
+ * @param   y       y coordinate of the box
+ * @param   width   width of the box
+ * @param   height  height of the box
+ * @param   hue     hue of the box
+ */
+extern void
+rldisp_drboxf(rldisp *this, int x, int y, int width, int height, rlhue hue);
+
 /* @brief   Finalizes rendering an rldisp for a frame
  *
  * You should end every discrete frame of rendering by calling this function.
@@ -428,6 +494,40 @@ rltmap_init(const char *font, int csize, int cnum, int width, int height,
 extern void
 rltmap_dpos(rltmap *this, int x, int y);
 
+/* @brief   Scales the size of an rltmap using nearest filter
+ *
+ * The default scale is rltmap_scale(this, 1.0f). This function sets the scale
+ * of the rltmap, so subsequent calls are not additive.
+ *
+ * @param   this    pointer to an rltmap
+ * @param   scale   new scale value
+ */
+extern void
+rltmap_scale(rltmap *this, float scale);
+
+/* @brief   Sets the origin coordinates of an rltmap
+ *
+ * The origin is used when calculating offsets for rltiles of type
+ * RL_TILE_EXACT and when rotating the rltmap.
+ *
+ * @param   this    pointer to an rltmap
+ * @param   xorig   x coordinate of the new origin
+ * @param   yorig   y coordinate of the new origin
+ */
+extern void
+rltmap_orign(rltmap *this, int origx, int origy);
+
+/* @brief   Rotates an rltmap clockwise around an internal coordinate
+ *
+ * The default rotation is rltmap_angle(this, 0, 0, 0.0f). This function sets
+ * the rotation of the rltmap, so subsequent calls are not additive.
+ *
+ * @param   this    pointer to an rltmap
+ * @param   rot     degrees to rotate clockwise
+ */
+extern void
+rltmap_angle(rltmap *this, float rot);
+
 /* @brief   Updates an rltmap at coords with tile data
  *
  * @param   this    pointer to an rltmap
@@ -542,6 +642,28 @@ rlhue function declarations
  */
 extern void
 rlhue_set(rlhue *this, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+
+/* @brief   Increments the rgba values of an rlhue
+ *
+ * @param   this    pointer to an rlhue
+ * @param   r       red increment value
+ * @param   g       green increment value
+ * @param   b       blue increment value
+ * @param   a       alpha increment value
+ */
+extern void
+rlhue_add(rlhue *this, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+
+/* @brief   Decrements the rgba values of an rlhue
+ *
+ * @param   this    pointer to an rlhue
+ * @param   r       red decrement value
+ * @param   g       green decrement value
+ * @param   b       blue decrement value
+ * @param   a       alpha decrement value
+ */
+extern void
+rlhue_sub(rlhue *this, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
 #ifdef __cplusplus
 }

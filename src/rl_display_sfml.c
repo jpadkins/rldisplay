@@ -1,5 +1,6 @@
 #include "rl_display.h"
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,9 +30,13 @@ struct rltmap
     int offx;
     int offy;
     int cnum;
+    int origx;
+    int origy;
+    float rot;
     int csize;
     int width;
     int height;
+    float scale;
     sfFont *font;
     sfGlyph **glyphs;
     sfVertexArray *fg;
@@ -347,7 +352,7 @@ rldisp_drtmap(rldisp *this, rltmap *tmap)
 {
     sfRenderStates states;
 
-    if (!this || !this->window.handle || !tmap)
+    if (!this || !this->frame.handle || !tmap)
         return;
 
     states.shader = NULL;
@@ -356,8 +361,128 @@ rldisp_drtmap(rldisp *this, rltmap *tmap)
     states.texture = sfFont_getTexture(tmap->font, (unsigned)tmap->csize);
     sfTransform_translate(&states.transform, (float)tmap->x, (float)tmap->y);
 
+    sfTransform_scale(&states.transform, (float)tmap->scale,
+        (float)tmap->scale);
+
+    sfTransform_rotateWithCenter(&states.transform, tmap->rot,
+        (float)tmap->origx, (float)tmap->origy);
+
     sfRenderTexture_drawVertexArray(this->frame.handle, tmap->bg, &states);
     sfRenderTexture_drawVertexArray(this->frame.handle, tmap->fg, &states);
+}
+
+extern void
+rldisp_drline(rldisp *this, int x0, int y0, int x1, int y1, int thick,
+    rlhue hue)
+{
+    float unit;
+    sfVertex vert[4];
+    sfVector2f dir, udir, perp, off;
+
+    if (!this || !this->frame.handle)
+        return;
+
+    dir.x = (float)(x1 - x0);
+    dir.y = (float)(y1 - y0);
+
+    unit = sqrtf(dir.x * dir.x + dir.y * dir.y);
+
+    udir.x = dir.x / unit;
+    udir.y = dir.y / unit;
+
+    perp.x = -udir.y;
+    perp.y = -udir.x;
+
+    off.x = perp.x * ((float)thick / 2.0f);
+    off.y = perp.y * ((float)thick / 2.0f);
+
+    vert[0].position.x = (float)x0 + off.x;
+    vert[0].position.y = (float)y0 + off.y;
+    vert[1].position.x = (float)x1 + off.x;
+    vert[1].position.y = (float)y1 + off.y;
+    vert[2].position.x = (float)x1 - off.x;
+    vert[2].position.y = (float)y1 - off.y;
+    vert[3].position.x = (float)x0 - off.x;
+    vert[3].position.y = (float)y0 - off.x;
+
+    for (int i = 0; i < 4; ++i)
+        vert[i].color = (sfColor){hue.r, hue.g, hue.b, hue.a};
+
+    sfRenderTexture_drawPrimitives(this->frame.handle, vert, 4, sfQuads, NULL);
+}
+
+extern void
+rldisp_drboxo(rldisp *this, int x, int y, int width, int height, int thick,
+    rlhue hue)
+{
+    sfColor color;
+    sfRectangleShape *rect;
+    sfVector2f pos = {(float)x, (float)y};
+    sfVector2f size = {(float)width, (float)height};
+
+    if (!this || !this->frame.handle || !(rect = sfRectangleShape_create()))
+        return;
+
+    color = (sfColor){hue.r, hue.g, hue.b, hue.a};
+
+    sfRectangleShape_setSize(rect, size);
+    sfRectangleShape_setPosition(rect, pos);
+    sfRectangleShape_setOutlineColor(rect, color);
+    sfRectangleShape_setFillColor(rect, sfTransparent);
+    sfRectangleShape_setOutlineThickness(rect, (float)thick);
+
+    sfRenderTexture_drawRectangleShape(this->frame.handle, rect, NULL);
+
+    sfRectangleShape_destroy(rect);
+}
+
+extern void
+rldisp_drboxi(rldisp *this, int x, int y, int width, int height, int thick,
+    rlhue hue)
+{
+    sfColor color;
+    sfRectangleShape *rect;
+    sfVector2f pos = {(float)(x + thick), (float)(y + thick)};
+    sfVector2f size = {(float)(width - 2 * thick),
+        (float)(height - 2 * thick)};
+
+    if (!this || !this->frame.handle || !(rect = sfRectangleShape_create()))
+        return;
+
+    color = (sfColor){hue.r, hue.g, hue.b, hue.a};
+
+    sfRectangleShape_setSize(rect, size);
+    sfRectangleShape_setPosition(rect, pos);
+    sfRectangleShape_setOutlineColor(rect, color);
+    sfRectangleShape_setFillColor(rect, sfTransparent);
+    sfRectangleShape_setOutlineThickness(rect, (float)thick);
+
+    sfRenderTexture_drawRectangleShape(this->frame.handle, rect, NULL);
+
+    sfRectangleShape_destroy(rect);
+}
+
+extern void
+rldisp_drboxf(rldisp *this, int x, int y, int width, int height, rlhue hue)
+{
+    sfColor color;
+    sfRectangleShape *rect;
+    sfVector2f pos = {(float)x, (float)y};
+    sfVector2f size = {(float)width, (float)height};
+
+    if (!this || !this->frame.handle || !(rect = sfRectangleShape_create()))
+        return;
+
+    color = (sfColor){hue.r, hue.g, hue.b, hue.a};
+
+    sfRectangleShape_setSize(rect, size);
+    sfRectangleShape_setPosition(rect, pos);
+    sfRectangleShape_setFillColor(rect, color);
+    sfRectangleShape_setOutlineColor(rect, color);
+
+    sfRenderTexture_drawRectangleShape(this->frame.handle, rect, NULL);
+
+    sfRectangleShape_destroy(rect);
 }
 
 void
@@ -874,11 +999,18 @@ rltmap_init(const char *font, int csize, int cnum, int width, int height,
     if (!(this->glyphs = malloc(sizeof(sfGlyph *) * (long unsigned)cnum)))
         goto error;
 
+    for (int i = 0; i < cnum; ++i)
+        this->glyphs[i] = NULL;
+
     this->x = 0;
     this->y = 0;
+    this->origx = 0;
+    this->origy = 0;
+    this->rot = 0.0f;
     this->offx = offx;
     this->offy = offy;
     this->cnum = cnum;
+    this->scale = 1.0f;
     this->csize = csize;
     this->width = width;
     this->height = height;
@@ -899,6 +1031,35 @@ rltmap_dpos(rltmap *this, int x, int y)
 
     this->x = x;
     this->y = y;
+}
+
+extern void
+rltmap_scale(rltmap *this, float scale)
+{
+    if (!this)
+        return;
+
+    this->scale = scale;
+}
+
+extern void
+rltmap_orign(rltmap *this, int origx, int origy)
+{
+    if (!this)
+        return;
+
+    this->origx = origx;
+    this->origy = origy;
+
+}
+
+extern void
+rltmap_angle(rltmap *this, float rot)
+{
+    if (!this)
+        return;
+
+    this->rot = rot;
 }
 
 void
@@ -1033,3 +1194,26 @@ rlhue_set(rlhue *this, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
     this->a = a;
 }
 
+extern void
+rlhue_add(rlhue *this, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+{
+    if (!this)
+        return;
+
+    this->r = (uint8_t)(this->r + r);
+    this->g = (uint8_t)(this->g + g);
+    this->b = (uint8_t)(this->b + b);
+    this->a = (uint8_t)(this->a + a);
+}
+
+extern void
+rlhue_sub(rlhue *this, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+{
+    if (!this)
+        return;
+
+    this->r = (uint8_t)(this->r - r);
+    this->g = (uint8_t)(this->g - g);
+    this->b = (uint8_t)(this->b - b);
+    this->a = (uint8_t)(this->a - a);
+}

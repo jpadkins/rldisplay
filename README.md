@@ -13,7 +13,7 @@ the package managers for most \*nix, homebrew on macOS, or can be downloaded
 directly from the project's website prebuilt for Windows or the source code for
 \*BSD: [link.](https://www.sfml-dev.org/download/csfml/)
 
-Once stabilized, a header-only version of roguelike_display will be generated.
+Once stabilized, a header-only version of roguelike\_display will be generated.
 
 ## Documentation
 
@@ -25,7 +25,7 @@ Because whenever I went to make a roguelike game, regardless of the window
 management/rendering library I used, I'd eventually end up abstracting things
 out into a similar API. I decided to standardize that API, so that in the
 future I can cut down on boilerplate code. And by using C99, it should be easy
-to generate bindings for other languages.
+to create bindings down the road for other languages.
 
 For the initial implementation I went with CSFML because I wanted to get
 something up and running quickly. After I work with the API a bit and

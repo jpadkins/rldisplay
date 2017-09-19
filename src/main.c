@@ -3,6 +3,7 @@
 #include <wchar.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdbool.h>
 #include "rl_display.h"
 
@@ -29,11 +30,11 @@ int main(void)
     wchar_t *wstr = L"Hello World!\0";
     char *font = "res/fonts/unifont.ttf";
 
-    rltile *tile = NULL;
     rldisp *disp = NULL;
     rlhue color = { 0, 0, 0, 255 };
     rlhue fg = { 255, 255, 255, 255};
-    rltmap *tmap = NULL, *cursor = NULL;
+    rltmap *tmap = NULL, *curtmap = NULL;
+    rltile *tile = NULL, *curtile = NULL;
 
     srand((unsigned)time(NULL));
 
@@ -60,33 +61,35 @@ int main(void)
     }
 
     for (int i = 0; i < 50; ++i)
-    {
-        for (int j = 0; j < 36; ++j)
-        {
-            rltmap_tile(tmap, tile, i, j);
-        }
-    }
+    for (int j = 0; j < 36; ++j)
+        rltmap_tile(tmap, tile, i, j);
 
     rltmap_wstrr(tmap, wstr, fg, color, RL_TILE_CENTER, 0, 0);
     rltmap_wstrb(tmap, wstr, fg, color, RL_TILE_CENTER, 0, 1);
 
-    rltile_glyph(tile, L'↖');
-    rltile_type(tile, RL_TILE_EXACT);
-    rlhue_set(&color, 0, 0, 0, 0);
-    rltile_bghue(tile, color);
-    rlhue_set(&color, 255, 255, 255, 255);
-    rltile_fghue(tile, color);
-    rltile_right(tile, -9.0f);
-    rltile_bottm(tile, -9.0f);
-
-    if (!(cursor = rltmap_init(font, 32, 65536, 1, 1, 32, 32)))
+    if (!(curtile = rltile_null()))
     {
         result = EXIT_FAILURE;
         goto cleanup;
     }
 
-    rltmap_tile(cursor, tile, 0, 0);
-    rltile_type(tile, RL_TILE_CENTER);
+    if (!(curtmap = rltmap_init(font, 16, 65536, 1, 1, 16, 16)))
+    {
+        result = EXIT_FAILURE;
+        goto cleanup;
+    }
+
+    rltile_glyph(curtile, L'⬉');
+    rltile_type(curtile, RL_TILE_EXACT);
+    rlhue_set(&color, 0, 0, 0, 255);
+    rltile_bghue(curtile, color);
+    rlhue_set(&color, 255, 255, 255, 255);
+    rltile_fghue(curtile, color);
+    rltile_right(curtile, 0.0f);
+    rltile_bottm(curtile, 0.0f);
+    rltmap_orign(curtmap, 8, 8);
+
+    rltmap_tile(curtmap, curtile, 0, 0);
 
     while (rldisp_status(disp) && run)
     {
@@ -95,41 +98,76 @@ int main(void)
         if (rldisp_key(disp, RL_KEY_ESCAPE))
             run = false;
 
+        if (rldisp_key(disp, RL_KEY_MOUSELEFT))
+        {
+            rltile_right(curtile, -3.0f);
+            rltile_bottm(curtile, -3.0f);
+            rltmap_tile(curtmap, curtile, 0, 0);
+        }
+        else
+        {
+            rltile_right(curtile, 0.0f);
+            rltile_bottm(curtile, 0.0f);
+            rltmap_tile(curtmap, curtile, 0, 0);
+        }
+
+        {
+            static bool inc = true;
+            static float rot = 0.0f;
+            static float scale = 1.0f;
+            static rlhue curhue = {170, 170, 170, 255};
+
+            if (inc)
+            {
+                scale += 0.01f;
+                rlhue_add(&curhue, 1, 1, 1, 0);
+                rltile_fghue(curtile, curhue);
+                if (curhue.r >= 255)
+                    inc = false;
+            }
+            else
+            {
+                scale -= 0.01f;
+                rlhue_sub(&curhue, 1, 1, 1, 0);
+                rltile_fghue(curtile, curhue);
+                if (curhue.r <= 170)
+                    inc = true;
+            }
+
+            rot += 1.0f;
+            rltmap_angle(curtmap, rot);
+        }
+
         if (rldisp_key(disp, RL_KEY_SPACE))
         {
             for (int i = 0; i < 50; ++i)
-            {
             for (int j = 0; j < 36; ++j)
             {
                 rlhue_set(&color, rndcolor(), rndcolor(), rndcolor(), 255);
-
                 rltile_fghue(tile, color);
-
                 rlhue_set(&color, rndcolor(), rndcolor(), rndcolor(), 255);
-
                 rltile_bghue(tile, color);
-
-                rltile_glyph(tile, rnducode());
-
+                rltile_glyph(tile, rndascii());
                 rltmap_tile(tmap, tile, i, j);
-            }
             }
         }
 
         rldisp_mouse(disp, &mousex, &mousey);
-        rltmap_dpos(cursor, mousex, mousey);
+        rltmap_dpos(curtmap, mousex, mousey);
 
         rldisp_clr(disp);
         rldisp_drtmap(disp, tmap);
-        rldisp_drtmap(disp, cursor);
+        rldisp_drtmap(disp, curtmap);
         rldisp_prsnt(disp);
     }
 
 cleanup:
-    if (tile) rltile_free(tile);
-    if (cursor) rltmap_free(cursor);
-    if (tmap) rltmap_free(tmap);
+
     if (disp) rldisp_free(disp);
+    if (tile) rltile_free(tile);
+    if (tmap) rltmap_free(tmap);
+    if (curtile) rltile_free(curtile);
+    if (curtmap) rltmap_free(curtmap);
 
     return result;
 }
