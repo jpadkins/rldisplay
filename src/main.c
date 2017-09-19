@@ -22,6 +22,11 @@ wchar_t rnducode(void)
     return (rand()%65506) + 30;
 }
 
+/* NOTE:
+ * This main.c file is for testing/experimenting, and should NOT be used as
+ * a reference
+ */
+
 int main(void)
 {
     bool run = true;
@@ -38,7 +43,7 @@ int main(void)
 
     srand((unsigned)time(NULL));
 
-    if (!(disp = rldisp_init(0, 0, 800, 576, "window", true)))
+    if (!(disp = rldisp_init(1920, 1080, 800, 576, "window", false)))
     {
         result = EXIT_FAILURE;
         goto cleanup;
@@ -81,7 +86,7 @@ int main(void)
 
     rltile_glyph(curtile, L'⬉');
     rltile_type(curtile, RL_TILE_EXACT);
-    rlhue_set(&color, 0, 0, 0, 255);
+    rlhue_set(&color, 0, 0, 0, 0);
     rltile_bghue(curtile, color);
     rlhue_set(&color, 255, 255, 255, 255);
     rltile_fghue(curtile, color);
@@ -94,21 +99,56 @@ int main(void)
     while (rldisp_status(disp) && run)
     {
         rldisp_evtflsh(disp);
+        rldisp_mouse(disp, &mousex, &mousey);
 
         if (rldisp_key(disp, RL_KEY_ESCAPE))
             run = false;
+
+        static bool drag = false;
+        static bool drift = false;
+        static int dmousex = 0, dmousey = 0;
 
         if (rldisp_key(disp, RL_KEY_MOUSELEFT))
         {
             rltile_right(curtile, -3.0f);
             rltile_bottm(curtile, -3.0f);
             rltmap_ptile(curtmap, curtile, 0, 0);
+
+            if (!drag)
+            {
+                drag = true;
+                dmousex = mousex;
+                dmousey = mousey;
+            }
+            else
+            {
+                rltmap_move(tmap, mousex - dmousex, mousey - dmousey);
+                dmousex = mousex;
+                dmousey = mousey;
+            }
         }
         else
         {
+            drag = false;
             rltile_right(curtile, 0.0f);
             rltile_bottm(curtile, 0.0f);
             rltmap_ptile(curtmap, curtile, 0, 0);
+
+            if (rldisp_key(disp, RL_KEY_D))
+                drift = true;
+
+            if (drift)
+            {
+                if (mousex < 5)
+                    rltmap_move(tmap, 3, 0);
+                else if (mousex > 755)
+                    rltmap_move(tmap, -3, 0);
+
+                if (mousey < 5)
+                    rltmap_move(tmap, 0, 3);
+                else if (mousey > 571)
+                    rltmap_move(tmap, 0, -3);
+            }
         }
 
         if (rldisp_key(disp, RL_KEY_F))
@@ -120,7 +160,6 @@ int main(void)
 
         {
             static bool inc = true;
-            static float rot = 0.0f;
             static float scale = 1.0f;
             static rlhue curhue = {170, 170, 170, 255};
 
@@ -140,9 +179,6 @@ int main(void)
                 if (curhue.r <= 170)
                     inc = true;
             }
-
-            rot += 1.0f;
-            rltmap_angle(curtmap, rot);
         }
 
         if (rldisp_key(disp, RL_KEY_SPACE))
@@ -154,18 +190,16 @@ int main(void)
                 rltile_fghue(tile, color);
                 rlhue_set(&color, rndcolor(), rndcolor(), rndcolor(), 255);
                 rltile_bghue(tile, color);
-                rltile_glyph(tile, rndascii());
+                rltile_glyph(tile, rnducode());
                 rltmap_ptile(tmap, tile, i, j);
             }
         }
 
-        rldisp_mouse(disp, &mousex, &mousey);
-        rltmap_dpos(curtmap, mousex, mousey);
+        rltmap_dpos(curtmap, mousex, mousey); 
 
         rldisp_clr(disp);
         rldisp_drtmap(disp, tmap);
         rldisp_drtmap(disp, curtmap);
-        rldisp_drline(disp, 400, 288, mousex, mousey, 2, color);
         rldisp_prsnt(disp);
     }
 
