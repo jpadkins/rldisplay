@@ -88,7 +88,7 @@ if (!(tile = rltile_init(L'╬', fg_color, bg_color, RLTILE_CENTER, 0.0f, 0.0f))
     goto cleanup;
 
 /* Update the rltmap's tile grid at coordinate 0x0 with data from tile */
-rltmap_tile(tmap, tile, 0, 0);
+rltmap_ptile(tmap, tile, 0, 0);
 
 while (rldisp_status(disp) && run)
 {

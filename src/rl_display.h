@@ -528,15 +528,35 @@ rltmap_orign(rltmap *this, int origx, int origy);
 extern void
 rltmap_angle(rltmap *this, float rot);
 
-/* @brief   Updates an rltmap at coords with tile data
+/* @brief   Updates an rltmap at coords with rltile data
  *
  * @param   this    pointer to an rltmap
- * @param   t       pointer to an rltile to update the rltmap with
+ * @param   tile    pointer to an rltile to update the rltmap with
  * @param   x       x coordinate of the tile to update (within the rltmap)
  * @param   y       y coordiante of the tile to update (within the rltmap)
  */
 extern void
-rltmap_tile(rltmap *this, rltile *t, int x, int y);
+rltmap_ptile(rltmap *this, rltile *tile, int x, int y);
+
+/* @brief   Updates the foreground (glyph) hue at the coords on an rltmap
+ *
+ * @param   this    pointer to an rltmap
+ * @param   hue     new foreground (glyph) hue
+ * @param   x       x coordinate of the tile to update
+ * @param   y       y coordinate of the tile to update
+ */
+extern void
+rltmap_phuef(rltmap *this, rlhue hue, int x, int y);
+
+/* @brief   Updates the background hue at the coords on an rltmap
+ *
+ * @param   this    pointer to an rltmap
+ * @param   hue     new background hue
+ * @param   x       x coordinate of the tile to update
+ * @param   y       y coordinate of the tile to update
+ */
+extern void
+rltmap_phueb(rltmap *this, rlhue hue, int x, int y);
 
 /* @brief   Updates an rltmap with a *wchar_t, moving towards the right
  *

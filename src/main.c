@@ -59,11 +59,11 @@ int main(void)
         result = EXIT_FAILURE;
         goto cleanup;
     }
-
+/*
     for (int i = 0; i < 50; ++i)
     for (int j = 0; j < 36; ++j)
-        rltmap_tile(tmap, tile, i, j);
-
+        rltmap_ptile(tmap, tile, i, j);
+*/
     rltmap_wstrr(tmap, wstr, fg, color, RL_TILE_CENTER, 0, 0);
     rltmap_wstrb(tmap, wstr, fg, color, RL_TILE_CENTER, 0, 1);
 
@@ -89,7 +89,7 @@ int main(void)
     rltile_bottm(curtile, 0.0f);
     rltmap_orign(curtmap, 8, 8);
 
-    rltmap_tile(curtmap, curtile, 0, 0);
+    rltmap_ptile(curtmap, curtile, 0, 0);
 
     while (rldisp_status(disp) && run)
     {
@@ -102,13 +102,20 @@ int main(void)
         {
             rltile_right(curtile, -3.0f);
             rltile_bottm(curtile, -3.0f);
-            rltmap_tile(curtmap, curtile, 0, 0);
+            rltmap_ptile(curtmap, curtile, 0, 0);
         }
         else
         {
             rltile_right(curtile, 0.0f);
             rltile_bottm(curtile, 0.0f);
-            rltmap_tile(curtmap, curtile, 0, 0);
+            rltmap_ptile(curtmap, curtile, 0, 0);
+        }
+
+        if (rldisp_key(disp, RL_KEY_F))
+        {
+            for (int i = 0; i < 50; ++i)
+            for (int j = 0; j < 36; ++j)
+                rltmap_phueb(tmap, color, i, j);
         }
 
         {
@@ -148,7 +155,7 @@ int main(void)
                 rlhue_set(&color, rndcolor(), rndcolor(), rndcolor(), 255);
                 rltile_bghue(tile, color);
                 rltile_glyph(tile, rndascii());
-                rltmap_tile(tmap, tile, i, j);
+                rltmap_ptile(tmap, tile, i, j);
             }
         }
 
@@ -158,6 +165,7 @@ int main(void)
         rldisp_clr(disp);
         rldisp_drtmap(disp, tmap);
         rldisp_drtmap(disp, curtmap);
+        rldisp_drline(disp, 400, 288, mousex, mousey, 2, color);
         rldisp_prsnt(disp);
     }
 

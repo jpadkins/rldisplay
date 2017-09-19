@@ -382,8 +382,8 @@ rldisp_drline(rldisp *this, int x0, int y0, int x1, int y1, int thick,
     if (!this || !this->frame.handle)
         return;
 
-    dir.x = (float)(x1 - x0);
-    dir.y = (float)(y1 - y0);
+    dir.x = (float)x1 - (float)x0;
+    dir.y = (float)y1 - (float)y0;
 
     unit = sqrtf(dir.x * dir.x + dir.y * dir.y);
 
@@ -391,17 +391,20 @@ rldisp_drline(rldisp *this, int x0, int y0, int x1, int y1, int thick,
     udir.y = dir.y / unit;
 
     perp.x = -udir.y;
-    perp.y = -udir.x;
+    perp.y = udir.x;
 
     off.x = perp.x * ((float)thick / 2.0f);
     off.y = perp.y * ((float)thick / 2.0f);
 
     vert[0].position.x = (float)x0 + off.x;
     vert[0].position.y = (float)y0 + off.y;
+
     vert[1].position.x = (float)x1 + off.x;
     vert[1].position.y = (float)y1 + off.y;
+
     vert[2].position.x = (float)x1 - off.x;
     vert[2].position.y = (float)y1 - off.y;
+
     vert[3].position.x = (float)x0 - off.x;
     vert[3].position.y = (float)y0 - off.x;
 
@@ -1063,12 +1066,47 @@ rltmap_angle(rltmap *this, float rot)
 }
 
 void
-rltmap_tile(rltmap *this, rltile *tile, int x, int y)
+rltmap_ptile(rltmap *this, rltile *tile, int x, int y)
 {
     if (!this || !tile || tile->glyph > this->cnum)
         return;
 
     rltmap_updtile(this, tile, x, y);
+}
+
+extern void
+rltmap_phuef(rltmap *this, rlhue hue, int x, int y)
+{
+    size_t vi;
+    sfColor color = {hue.r, hue.g, hue.b, hue.a};
+
+    if (!this)
+        return;
+
+    vi = (unsigned)rltmap_index(this, x, y) * 4;
+
+    sfVertexArray_getVertex(this->fg, vi)->color = color;
+    sfVertexArray_getVertex(this->fg, vi + 1)->color = color;
+    sfVertexArray_getVertex(this->fg, vi + 2)->color = color;
+    sfVertexArray_getVertex(this->fg, vi + 3)->color = color;
+}
+
+extern void
+rltmap_phueb(rltmap *this, rlhue hue, int x, int y)
+{
+    size_t vi;
+    sfColor color = {hue.r, hue.g, hue.b, hue.a};
+
+    if (!this)
+        return;
+
+    vi = (unsigned)rltmap_index(this, x, y) * 4;
+
+    sfVertexArray_getVertex(this->bg, vi)->color = color;
+    sfVertexArray_getVertex(this->bg, vi + 1)->color = color;
+    sfVertexArray_getVertex(this->bg, vi + 2)->color = color;
+    sfVertexArray_getVertex(this->bg, vi + 3)->color = color;
+
 }
 
 extern void
