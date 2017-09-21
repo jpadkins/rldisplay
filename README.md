@@ -100,7 +100,7 @@ while (rldisp_status(disp) && run)
         run = false;
 
     /* Clear the rldisp */
-    rldisp_clr(disp);
+    rldisp_clear(disp);
     /* Draw the rltmap onto the rldisp's frame buffer */
     rldisp_drtmap(disp, tmap);
     /* Stretch the frame buffer to the window and finish rendering */

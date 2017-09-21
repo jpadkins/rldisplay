@@ -70,6 +70,7 @@ struct rldisp
     struct {
         int width;
         int height;
+        int scroll;
         char *name;
         bool fscrn;
         sfRenderWindow *handle;
@@ -91,6 +92,9 @@ Static global variables
 /* TODO: Tilemaps with the same csize should share their *glyphs arrays */
 
 /* static sfGlyph glyphs[65536]; */
+
+static int rldcount = 0;
+static sfClock *rldclock = NULL;
 
 /******************************************************************************
 Static function declarations
@@ -179,6 +183,13 @@ rldisp_init(int wwidth, int wheight, int fwidth, int fheight, char *name,
     sfVideoMode mode = {(unsigned)wwidth, (unsigned)wheight, 32u};
     sfUint32 style = (fscrn) ? sfFullscreen : sfClose | sfTitlebar;
 
+    /* Increment total open display count */
+    rldcount += 1;
+
+    /* Initialize global clock if this is the only display */
+    if (rldcount == 1 && !rldclock && !(rldclock = sfClock_create()))
+        goto error;
+
     /* If both wwidth and wheight are 0, then select the largest possible
        video mode to use */
     if (!wwidth && !wheight)
@@ -198,6 +209,7 @@ rldisp_init(int wwidth, int wheight, int fwidth, int fheight, char *name,
         NULL)))
         goto error;
 
+    this->window.scroll = 0;
     this->window.fscrn = fscrn;
     this->window.width = wwidth;
     this->window.height = wheight;
@@ -289,6 +301,15 @@ rldisp_shwcur(rldisp *this, bool visible)
     sfRenderWindow_setMouseCursorVisible(this->window.handle, visible);
 }
 
+extern void
+rldisp_filter(rldisp *this, bool filter)
+{
+    if (!this || !this->frame.handle)
+        return;
+
+    sfRenderTexture_setSmooth(this->frame.handle, filter);
+}
+
 void
 rldisp_fpslim(rldisp *this, int limit)
 {
@@ -303,6 +324,15 @@ rldisp_free(rldisp *this)
 {
     if (!this)
         return;
+
+    rldcount -= 1;
+
+    /* If this is the last rldisp, free the global clock */
+    if (rldcount == 0)
+    {
+        sfClock_destroy(rldclock);
+        rldclock = NULL;
+    }
 
     if (this->frame.handle)
         sfRenderTexture_destroy(this->frame.handle);
@@ -345,6 +375,9 @@ rldisp_evtflsh(rldisp *this)
                 rldisp_rsizd(this, (int)evt.size.width,
                     (int)evt.size.height);
                 break;
+            case sfEvtMouseWheelScrolled:
+                this->window.scroll += (int)evt.mouseWheelScroll.delta;
+                break;
             default:
                 break;
         }
@@ -352,7 +385,7 @@ rldisp_evtflsh(rldisp *this)
 }
 
 void
-rldisp_clr(rldisp *this)
+rldisp_clear(rldisp *this)
 {
     if (!this || !this->window.handle)
         return;
@@ -370,7 +403,7 @@ rldisp_clrhue(rldisp *this, rlhue hue)
 }
 
 void
-rldisp_drtmap(rldisp *this, rltmap *tmap)
+rldisp_dtmap(rldisp *this, rltmap *tmap)
 {
     sfRenderStates states;
 
@@ -394,7 +427,7 @@ rldisp_drtmap(rldisp *this, rltmap *tmap)
 }
 
 extern void
-rldisp_drline(rldisp *this, int x0, int y0, int x1, int y1, int thick,
+rldisp_dline(rldisp *this, int x0, int y0, int x1, int y1, int thick,
     rlhue hue)
 {
     float unit;
@@ -437,7 +470,7 @@ rldisp_drline(rldisp *this, int x0, int y0, int x1, int y1, int thick,
 }
 
 extern void
-rldisp_drboxo(rldisp *this, int x, int y, int width, int height, int thick,
+rldisp_dboxo(rldisp *this, int x, int y, int width, int height, int thick,
     rlhue hue)
 {
     sfColor color;
@@ -462,7 +495,7 @@ rldisp_drboxo(rldisp *this, int x, int y, int width, int height, int thick,
 }
 
 extern void
-rldisp_drboxi(rldisp *this, int x, int y, int width, int height, int thick,
+rldisp_dboxi(rldisp *this, int x, int y, int width, int height, int thick,
     rlhue hue)
 {
     sfColor color;
@@ -488,7 +521,7 @@ rldisp_drboxi(rldisp *this, int x, int y, int width, int height, int thick,
 }
 
 extern void
-rldisp_drboxf(rldisp *this, int x, int y, int width, int height, rlhue hue)
+rldisp_dboxf(rldisp *this, int x, int y, int width, int height, rlhue hue)
 {
     sfColor color;
     sfRectangleShape *rect;
@@ -519,8 +552,9 @@ rldisp_prsnt(rldisp *this)
         || !(sprite = sfSprite_create()))
         return;
 
+    this->window.scroll = 0;
     sfRenderTexture_display(this->frame.handle);
-
+    
     sfSprite_setScale(sprite, this->frame.scale);
     sfSprite_setTexture(sprite, sfRenderTexture_getTexture(this->frame.handle),
         false);
@@ -728,6 +762,22 @@ rldisp_mouse(rldisp *this, int *x, int *y)
         *y = m.y;
     else
         *y = (int)((float)m.y / this->frame.scale.y);
+}
+
+extern int
+rldisp_mscrl(rldisp *this)
+{
+    if (!this)
+        return 0;
+
+    return this->window.scroll;
+}
+
+extern double
+rldisp_delta(void)
+{
+    sfTime t = sfClock_restart(rldclock);
+    return (double)sfTime_asMicroseconds(t) / 1000000.0;
 }
 
 /******************************************************************************

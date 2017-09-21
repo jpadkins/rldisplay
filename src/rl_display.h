@@ -191,6 +191,18 @@ rldisp_vsync(rldisp *this, bool enabled);
 extern void
 rldisp_shwcur(rldisp *this, bool visible);
 
+/* @brief   Sets the filtering method for the frame buffer of an rldisp
+ *
+ * Determines if the frame buffer appears sharp/pixelated or blurry/smooth
+ * when scaled and drawn to the window. The default value is false (linear
+ * filtering).
+ *
+ * @param   this    pointer to an rldispo
+ * @param   filter  true for linear, false for nearest neighbor
+ */
+extern void
+rldisp_filter(rldisp *this, bool filter);
+
 /* @brief   Sets the fps limit of an rldisp window (or 0 to disable)
  *
  * The default value for an rldisp is 0 (disabled).
@@ -236,7 +248,7 @@ rldisp_evtflsh(rldisp *this);
  * @param   this    pointer to an rldisp
  */
 extern void
-rldisp_clr(rldisp *this);
+rldisp_clear(rldisp *this);
 
 /* @brief   Sets the clear hue for an rldisp window
  *
@@ -252,7 +264,7 @@ rldisp_clrhue(rldisp *this, rlhue hue);
  * @param   tmap    pointer to an rltmap
  */
 extern void
-rldisp_drtmap(rldisp *this, rltmap *tmap);
+rldisp_dtmap(rldisp *this, rltmap *tmap);
 
 /* @brief   Draws a line directly to an rldisp's frame buffer
  *
@@ -268,7 +280,7 @@ rldisp_drtmap(rldisp *this, rltmap *tmap);
  * @param   hue     hue of the line
  */
 extern void
-rldisp_drline(rldisp *this, int x0, int y0, int x1, int y1, int thick,
+rldisp_dline(rldisp *this, int x0, int y0, int x1, int y1, int thick,
     rlhue hue);
 
 /* @brief   Draws an outward empty box directly to an rldisp's frame buffer
@@ -285,7 +297,7 @@ rldisp_drline(rldisp *this, int x0, int y0, int x1, int y1, int thick,
  * @param   hue     hue of the box
  */
 extern void
-rldisp_drboxo(rldisp *this, int x, int y, int width, int height, int thick,
+rldisp_dboxo(rldisp *this, int x, int y, int width, int height, int thick,
     rlhue hue);
 
 /* @brief   Draws an inward empty box directly to an rldisp's frame buffer
@@ -302,7 +314,7 @@ rldisp_drboxo(rldisp *this, int x, int y, int width, int height, int thick,
  * @param   hue     hue of the box
  */
 extern void
-rldisp_drboxi(rldisp *this, int x, int y, int width, int height, int thick,
+rldisp_dboxi(rldisp *this, int x, int y, int width, int height, int thick,
     rlhue hue);
 
 /* @brief   Draws a filled-in box directly to an rldisp's frame buffer
@@ -318,7 +330,7 @@ rldisp_drboxi(rldisp *this, int x, int y, int width, int height, int thick,
  * @param   hue     hue of the box
  */
 extern void
-rldisp_drboxf(rldisp *this, int x, int y, int width, int height, rlhue hue);
+rldisp_dboxf(rldisp *this, int x, int y, int width, int height, rlhue hue);
 
 /* @brief   Finalizes rendering an rldisp for a frame
  *
@@ -395,6 +407,24 @@ rldisp_mousy(rldisp *this);
  */
 extern void
 rldisp_mouse(rldisp *this, int *mousex, int *mousey);
+
+/* @brief   Returns the net delta scrollwheel value for an rldisp this frame
+ *
+ * Returns the net amount that the scrollwheel has moved since the last call
+ * to rldisp_prsnt(1). Positive values indicate forward/up scroll, negative
+ * values indicate backward/down. rldisp_evtflsh(1) updates this value;
+ *
+ * @param   this    pointer to an rldisp
+ */
+extern int
+rldisp_mscrl(rldisp *this);
+
+/* @brief   Returns the delta time between calls in seconds
+ *
+ * @param   this    pointer to an rldisp
+ */
+extern double
+rldisp_delta(void);
 
 /******************************************************************************
 rltile function declarations
