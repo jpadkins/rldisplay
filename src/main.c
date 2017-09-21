@@ -43,7 +43,7 @@ view_set(rltmap *view, rltile *tile)
         rltmap_ptile(view, tile, i, j);
     }
 
-    rltile_glyph(tile, L'#');
+    rltile_glyph(tile, L'☰');
     rlhue_set(&hue, 100, 20, 20, 255);
     rltile_fghue(tile, hue);
     rlhue_set(&hue, 50, 10, 10, 255);
@@ -126,8 +126,8 @@ main(void)
     rldisp *disp = NULL;
     rltile *tile = NULL;
     int mousex = 0, mousey = 0;
-    rltmap *view = NULL, *menu = NULL, *curs = NULL;
     const char *font = "res/fonts/unifont.ttf";
+    rltmap *view = NULL, *menu = NULL, *curs = NULL;
 
     if (!(disp = rldisp_init(0, 0, 640, 480, "rldisplay", true)))
         goto cleanup;
@@ -138,7 +138,7 @@ main(void)
     if (!(menu = rltmap_init(font, 16, 65536, 20, 30, 8, 16)))
         goto cleanup;
 
-    if (!(curs = rltmap_init(font, 16, 65536, 1, 1, 16, 16)))
+    if (!(curs = rltmap_init(font, 32, 65536, 1, 1, 32, 32)))
         goto cleanup;
 
     if (!(tile = rltile_null()))
