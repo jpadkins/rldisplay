@@ -1,3 +1,11 @@
+/*
+ * PLEASE NOTE:
+ *
+ * This main.c file is for testing purposes, and shouldn't be used as a
+ * reference.
+ *
+ */
+
 #include <time.h>
 #include <stdio.h>
 #include <wchar.h>
