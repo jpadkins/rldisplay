@@ -25,7 +25,7 @@ Because whenever I went to make a roguelike game, regardless of the window
 management/rendering library I used, I'd eventually end up abstracting things
 out into a similar API. I decided to standardize that API, so that in the
 future I can cut down on boilerplate code. And by using C99, it should be easy
-to create bindings down the road for other languages.
+to create bindings down the road for other languages such as nim or crystal.
 
 For the initial implementation I went with CSFML because I wanted to get
 something up and running quickly. After I work with the API a bit and
