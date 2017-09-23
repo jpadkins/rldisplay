@@ -1,4 +1,4 @@
-# Roguelike Display
+# Roguelike Display (rldisplay)
 
 Provides an interface for creating and managing a window as well as rendering
 glyph data for text-centric graphical applications such as roguelike games. The

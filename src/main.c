@@ -26,8 +26,8 @@ view_set(rltmap *view, rltile *tile)
     if (!view || !tile)
         return;
     
-    for (int i = 0; i < 30; ++i)
-    for (int j = 0; j < 30; ++j)
+    for (int i = 0; i < 60; ++i)
+    for (int j = 0; j < 60; ++j)
     {
         if (rand()%15 == 0)
         {
@@ -57,8 +57,8 @@ view_set(rltmap *view, rltile *tile)
     rlhue_set(&hue, 50, 10, 10, 255);
     rltile_bghue(tile, hue);
 
-    housex = rand()%10 + 4;
-    housey = rand()%10 + 4;
+    housex = rand()%30 + 4;
+    housey = rand()%30 + 4;
 
     for (int i = housex; i < housex + 14; ++i)
     {
@@ -140,7 +140,7 @@ main(void)
     if (!(disp = rldisp_init(0, 0, 640, 480, "rldisplay", true)))
         goto cleanup;
 
-    if (!(view = rltmap_init(font, 16, 65536, 30, 30, 16, 16)))
+    if (!(view = rltmap_init(font, 16, 65536, 60, 60, 16, 16)))
         goto cleanup;
 
     if (!(menu = rltmap_init(font, 16, 65536, 20, 30, 8, 16)))
@@ -152,7 +152,7 @@ main(void)
     if (!(tile = rltile_null()))
         goto cleanup;
 
-    rltmap_dpos(view, 160, 0);
+    rltmap_dpos(view, -320, -320);
 
     rldisp_fpslim(disp, 60);
     rldisp_vsync(disp, true);
@@ -177,9 +177,22 @@ main(void)
 
         rltmap_dpos(curs, mousex, mousey);
 
+        if (rldisp_key(disp, RL_KEY_MOUSELEFT))
+            rltmap_move(curs, -3, -3);
+
+        if (mousex < 5)
+            rltmap_move(view, 5, 0);
+        else if (mousex > 635)
+            rltmap_move(view, -5, 0);
+
+        if (mousey < 5)
+            rltmap_move(view, 0, 5);
+        else if (mousey > 475)
+            rltmap_move(view, 0, -5);
+
         rldisp_clear(disp);
-        rldisp_dtmap(disp, menu);
         rldisp_dtmap(disp, view);
+        rldisp_dtmap(disp, menu);
         rldisp_dtmap(disp, curs);
         rldisp_prsnt(disp);
     }
