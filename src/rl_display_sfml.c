@@ -175,7 +175,7 @@ rldisp_updscl(rldisp *this)
 }
 
 rldisp *
-rldisp_init(int wwidth, int wheight, int fwidth, int fheight, char *name,
+rldisp_init(int wwidth, int wheight, int fwidth, int fheight, const char *name,
     bool fscrn)
 {
     size_t mcount;
@@ -754,12 +754,12 @@ rldisp_mouse(rldisp *this, int *x, int *y)
     m = sfMouse_getPositionRenderWindow(this->window.handle);
 
     if (m.x < 0 || m.x > this->window.width)
-        *x = m.x;
+        *x = -1;
     else
         *x = (int)((float)m.x / this->frame.scale.x);
 
     if (m.y < 0 || m.y > this->window.height)
-        *y = m.y;
+        *y = -1;
     else
         *y = (int)((float)m.y / this->frame.scale.y);
 }
@@ -873,6 +873,16 @@ rltile_bottm(rltile *this, float bottom)
     this->bottom = bottom;
 }
 
+extern void
+rltile_shift(rltile *this, float right, float bottom)
+{
+    if (!this)
+        return;
+
+    this->right = right;
+    this->bottom = bottom;
+}
+
 void
 rltile_free(rltile *this)
 {
@@ -922,24 +932,18 @@ rltmap_updtile(rltmap *this, rltile *t, int x, int y)
         b = (float)(this->offy) + bnds.top;
         break;
     case RL_TILE_EXACT:
-        r = (float)((int)(((float)(this->offx) -
-            (float)(rect.width)) / 2.0f));
-        b = (float)((int)(((float)(this->offy) -
-            (float)(rect.height)) / 2.0f));
+        r = (float)(int)(((float)(this->offx - rect.width) / 2.0f));
+        b = (float)(int)(((float)(this->offy - rect.height) / 2.0f));
         r += t->right;
         b += t->bottom;
         break;
     case RL_TILE_FLOOR:
-        r = (float)((int)(((float)(this->offx) -
-            (float)(rect.width)) / 2.0f));
-        b = (float)((int)((float)(this->offy) -
-            (float)(rect.height)));
+        r = (float)(int)((float)(this->offx - rect.width) / 2.0f);
+        b = (float)(int)((float)(this->offy - rect.height));
         break;
     case RL_TILE_CENTER:
-        r = (float)((int)(((float)(this->offx) -
-            (float)(rect.width)) / 2.0f));
-        b = (float)((int)(((float)(this->offy) -
-            (float)(rect.height)) / 2.0f));
+        r = (float)(int)((float)(this->offx - rect.width) / 2.0f);
+        b = (float)(int)((float)(this->offy - rect.height) / 2.0f);
         break;
     }
 
@@ -955,7 +959,7 @@ rltmap_updfg(rltmap *this, int i, rltile *t, int x, int y, float r, float b,
 {
     size_t vi = (size_t)i * 4;
 
-    if (!this || !t || !r)
+    if (!this || !t || !rect)
         return;
 
     sfVertexArray_getVertex(this->fg, vi)->position = (sfVector2f){
@@ -1271,19 +1275,39 @@ rltmap_free(rltmap *this)
 int
 rltmap_mousx(rltmap *this, rldisp *disp)
 {
+    int x;
+
     if (!this || !disp || !disp->window.handle)
         return 0;
 
-    return rldisp_mousx(disp) / this->offx;
+    x = rldisp_mousx(disp);
+
+    if (x != -1)
+    {
+        x -= this->x;
+        x /= this->offx;
+    }
+
+    return x;
 }
 
 int
 rltmap_mousy(rltmap *this, rldisp *disp)
 {
+    int y;
+
     if (!this || !disp || !disp->window.handle)
         return 0;
 
-    return rldisp_mousy(disp) / this->offy;
+    y = rldisp_mousy(disp);
+
+    if (y != -1)
+    {
+        y -= this->y;
+        y /= this->offy;
+    }
+
+    return y;
 }
 
 void
@@ -1293,9 +1317,17 @@ rltmap_mouse(rltmap *this, rldisp *disp, int *x, int *y)
         return;
 
     rldisp_mouse(disp, x, y);
-    
-    *x /= this->offx;
-    *y /= this->offy;
+
+    if (*x != -1)
+    {
+        *x -= this->x;
+        *x /= this->offx;
+    }
+    if (*y != -1)
+    {
+        *y -= this->y;
+        *y /= this->offy;
+    }
 }
 
 /******************************************************************************

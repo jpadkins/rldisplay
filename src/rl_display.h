@@ -141,7 +141,7 @@ rldisp function declarations
  * @return  a pointer to the new rldisp
  */
 extern rldisp *
-rldisp_init(int wwidth, int wheight, int fwidth, int fheight, char *name,
+rldisp_init(int wwidth, int wheight, int fwidth, int fheight, const char *name,
     bool fscrn);
 
 /* @brief   Sets an rldisp to be either fullscreen or windowed.
@@ -393,9 +393,8 @@ rldisp_mousy(rldisp *this);
  *
  * If the mouse is outside of the rldisp window, then the coords set will be
  * the absolute position on the monitor relative to the top left corner of the
- * window. If the mouse is inside of the rldisp window, then the coords set are
- * relative to the top left corner of the window, then adjusted to the size of
- * the frame buffer.
+ * window. If the mouse is inside of the rldisp window, then the coord is set
+ * to -1.
  *
  * For example, if the window dimensions are 800x600, but the frame buffer
  * dimensions are 640x480, and the mouse is exactly in the center of the window
@@ -505,6 +504,15 @@ rltile_right(rltile *this, float right);
  */
 extern void
 rltile_bottm(rltile *this, float bottom);
+
+/* @brief   Sets an rltile's right and bottom shift values
+ *
+ * @param   this    pointer to an rltile
+ * @param   right   new right shift value
+ * @param   bottom  new bottom shift value
+ */
+extern void
+rltile_shift(rltile *this, float right, float bottom);
 
 /* @brief   Frees the memory allocated for an rltile
  *
@@ -698,8 +706,8 @@ rltmap_mousy(rltmap *this, rldisp *disp);
  *
  * Given a rltmap and the rldisp that it would be drawn to, this function
  * sets the int * arguments to the x and y coordinates of the tile that the
- * mouse is currently over, or it sets them both to -1 if the mouse is not
- * over where the rltmap would be drawn to.
+ * mouse is currently over, or it sets them to -1 if the mouse is not over
+ * where the tmap would be drawn to.
  *
  * @param   this    pointer to an rltmap
  * @param   disp    pointer to an rldisp that the rltmap will be drawn to
