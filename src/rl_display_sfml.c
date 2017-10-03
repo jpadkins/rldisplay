@@ -60,7 +60,6 @@ struct rltmap
     int height;
     float scale;
     sfFont *font;
-    sfGlyph **glyphs;
     sfVertexArray *fg;
     sfVertexArray *bg;
 };
@@ -89,10 +88,6 @@ struct rldisp
 Static global variables
 ******************************************************************************/
 
-/* TODO: Tilemaps with the same csize should share their *glyphs arrays */
-
-/* static sfGlyph glyphs[65536]; */
-
 static int rldcount = 0;
 static sfClock *rldclock = NULL;
 
@@ -112,9 +107,6 @@ static void
 rldisp_rsizd(rldisp *this, int w, int h);
 
 /* rltmap */
-static void
-rltmap_chkchr(rltmap *this, wchar_t c);
-
 static int
 rltmap_index(rltmap *this, int x, int y);
 
@@ -897,59 +889,48 @@ rltmap function implementations
 ******************************************************************************/
 
 static void
-rltmap_chkchr(rltmap *this, wchar_t c)
-{
-    if (!this)
-        return;
-
-    if (!this->glyphs[(size_t)c] &&
-        (this->glyphs[(size_t)c] = malloc(sizeof(sfGlyph))))
-    {
-        *(this->glyphs[(size_t)c]) = sfFont_getGlyph(this->font,
-            (unsigned)c, (unsigned)this->csize, false, 0.0f);
-    }
-}
-
-static void
 rltmap_updtile(rltmap *this, rltile *t, int x, int y)
 {
     int i;
-    sfIntRect rect;
-    sfFloatRect bnds;
+    sfGlyph glyph;
     float r = 0.0f, b = 0.0f;
 
     if (!this || !t)
         return;
 
-    rltmap_chkchr(this, t->glyph);
-    rect = this->glyphs[(size_t)(t->glyph)]->textureRect;
+    glyph = sfFont_getGlyph(this->font, (unsigned)t->glyph,
+        (unsigned)this->csize, false, 0.0f);
 
     switch (t->type)
     {
     case RL_TILE_TEXT:
-        bnds = this->glyphs[(size_t)(t->glyph)]->bounds;
-        r = bnds.left;
-        b = (float)(this->offy) + bnds.top;
+        r = glyph.bounds.left;
+        b = (float)(this->offy) + glyph.bounds.top;
         break;
     case RL_TILE_EXACT:
-        r = (float)(int)(((float)(this->offx - rect.width) / 2.0f));
-        b = (float)(int)(((float)(this->offy - rect.height) / 2.0f));
+        r = (float)(int)(((float)(this->offx - glyph.textureRect.width)
+            / 2.0f));
+        b = (float)(int)(((float)(this->offy - glyph.textureRect.height)
+            / 2.0f));
         r += t->right;
         b += t->bottom;
         break;
     case RL_TILE_FLOOR:
-        r = (float)(int)((float)(this->offx - rect.width) / 2.0f);
-        b = (float)(int)((float)(this->offy - rect.height));
+        r = (float)(int)((float)(this->offx - glyph.textureRect.width)
+            / 2.0f);
+        b = (float)(int)((float)(this->offy - glyph.textureRect.height));
         break;
     case RL_TILE_CENTER:
-        r = (float)(int)((float)(this->offx - rect.width) / 2.0f);
-        b = (float)(int)((float)(this->offy - rect.height) / 2.0f);
+        r = (float)(int)((float)(this->offx - glyph.textureRect.width)
+            / 2.0f);
+        b = (float)(int)((float)(this->offy - glyph.textureRect.height)
+            / 2.0f);
         break;
     }
 
     i = rltmap_index(this, x, y);
 
-    rltmap_updfg(this, i, t, x, y, r, b, &rect);
+    rltmap_updfg(this, i, t, x, y, r, b, &glyph.textureRect);
     rltmap_updbg(this, i, t, x, y);
 }
 
@@ -1074,12 +1055,6 @@ rltmap_init(const char *font, int csize, int cnum, int width, int height,
 
     sfVertexArray_resize(this->bg, (unsigned)(width * height * 4));
     sfVertexArray_setPrimitiveType(this->bg, sfQuads);
-
-    if (!(this->glyphs = malloc(sizeof(sfGlyph *) * (long unsigned)cnum)))
-        goto error;
-
-    for (int i = 0; i < cnum; ++i)
-        this->glyphs[i] = NULL;
 
     this->x = 0;
     this->y = 0;
@@ -1259,14 +1234,6 @@ rltmap_free(rltmap *this)
 
     if (this->bg)
         sfVertexArray_destroy(this->bg);
-
-    if (this->glyphs)
-    {
-        for (int i = 0; i < this->cnum; ++i)
-            free(this->glyphs[i]);
-
-        free(this->glyphs);
-    }
 
     if (this)
         free(this);
