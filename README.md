@@ -109,9 +109,9 @@ while (rldisp_status(disp) && run)
 
 cleanup:
 
-rltile_cleanup(tile);
-rltmap_cleanup(tmap);
-rldisp_cleanup(disp);
+rltile_free(tile);
+rltmap_free(tmap);
+rldisp_free(disp);
 ...
 ```
 
